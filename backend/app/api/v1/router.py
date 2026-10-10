@@ -1,7 +1,10 @@
 from fastapi import APIRouter
-from app.api.v1.endpoints import system
+from app.api.v1.endpoints import system, organizations, campuses, blocks
 
 api_v1_router = APIRouter(prefix="/v1")
 
-# Mount system endpoints under /v1 (e.g. /api/v1/health, /api/v1/ready, /api/v1/info)
+# Mount endpoints under /v1
 api_v1_router.include_router(system.router)
+api_v1_router.include_router(organizations.router)
+api_v1_router.include_router(campuses.router)
+api_v1_router.include_router(blocks.router)
