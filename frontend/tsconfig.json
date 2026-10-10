@@ -20,6 +20,9 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
 
+    /* Types */
+    "types": ["@testing-library/jest-dom", "vite/client"],
+
     /* Path Aliases */
     "baseUrl": ".",
     "paths": {
