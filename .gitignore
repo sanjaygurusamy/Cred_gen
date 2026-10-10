@@ -1,0 +1,38 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.pytest_cache/
+.coverage
+htmlcov/
+dist/
+build/
+*.egg-info/
+.venv/
+env/
+venv/
+ENV/
+
+# Environment and secrets
+.env
+!.env.example
+*.local
+
+# Database files (preserve local databases, do not commit binaries)
+*.db
+*.sqlite
+*.sqlite3
+
+# Logs & temporary files
+*.log
+*.err
+*.out
+*.lock
+.DS_Store
+Thumbs.db
