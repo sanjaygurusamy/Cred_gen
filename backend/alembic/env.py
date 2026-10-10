@@ -12,7 +12,8 @@ from app.core.config import settings
 from app.models import (
     Base, Organization, Campus, CampusBlock,
     ActivityDefinition, BlockActivityAssignment, DailyActivityRecord,
-    ElectricityBaseline, ElectricityBaselineItem, DailyElectricityEstimate
+    ElectricityBaseline, ElectricityBaselineItem, DailyElectricityEstimate,
+    EmissionFactor, CarbonCalculationRecord
 )
 
 config = context.config

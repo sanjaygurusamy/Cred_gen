@@ -27,6 +27,12 @@ import {
   ActualElectricityRecord,
   ActualElectricityRecordCreatePayload,
   ElectricityComparisonResponse,
+  EmissionFactor,
+  EmissionFactorListResponse,
+  CarbonCalculationRequest,
+  CarbonCalculationResponse,
+  CarbonCalculationListResponse,
+  CarbonRecalculateRequest,
 } from '../types';
 
 const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000/api').replace(/\/$/, '');
@@ -322,4 +328,53 @@ export const apiClient = {
     end_date: string;
   }) =>
     request<ElectricityComparisonResponse>('/v1/electricity/comparison', { params }),
+
+  // Phase 5: Carbon Calculation Engine & Emission Factors
+  getEmissionFactors: (params?: {
+    category?: string;
+    scope?: string;
+    status?: string;
+    is_active?: boolean;
+    search?: string;
+    limit?: number;
+    offset?: number;
+  }) => request<EmissionFactorListResponse>('/v1/carbon/factors', { params }),
+
+  getEmissionFactorById: (factorId: string) =>
+    request<EmissionFactor>(`/v1/carbon/factors/${factorId}`),
+
+  seedEmissionFactors: () =>
+    request<{
+      status: string;
+      message: string;
+      created_factors: number;
+      updated_factors: number;
+      total_canonical: number;
+    }>('/v1/carbon/factors/seed', { method: 'POST' }),
+
+  calculateCarbon: (payload: CarbonCalculationRequest) =>
+    request<CarbonCalculationResponse>('/v1/carbon/calculate', {
+      method: 'POST',
+      body: payload,
+    }),
+
+  getCarbonCalculations: (params?: {
+    block_id?: string;
+    start_date?: string;
+    end_date?: string;
+    scope?: string;
+    activity_category?: string;
+    include_superseded?: boolean;
+    limit?: number;
+    offset?: number;
+  }) => request<CarbonCalculationListResponse>('/v1/carbon/calculations', { params }),
+
+  getCarbonCalculationById: (calcId: string) =>
+    request<CarbonCalculationResponse>(`/v1/carbon/calculations/${calcId}`),
+
+  recalculateCarbon: (calcId: string, payload?: CarbonRecalculateRequest) =>
+    request<CarbonCalculationResponse>(`/v1/carbon/calculations/${calcId}/recalculate`, {
+      method: 'POST',
+      body: payload || {},
+    }),
 };

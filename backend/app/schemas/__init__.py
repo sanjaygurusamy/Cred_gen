@@ -30,6 +30,12 @@ from app.schemas.electricity import (
     ActualElectricityRecordCreate, ActualElectricityRecordResponse,
     ElectricityComparisonRecord, ElectricityComparisonResponse
 )
+from app.schemas.carbon import (
+    EmissionFactorBase, EmissionFactorCreate, EmissionFactorUpdate,
+    EmissionFactorResponse, EmissionFactorListResponse,
+    CarbonCalculationRequest, CarbonCalculationResponse,
+    CarbonCalculationListResponse, CarbonRecalculateRequest
+)
 
 __all__ = [
     "HealthResponse",
@@ -82,4 +88,13 @@ __all__ = [
     "ActualElectricityRecordResponse",
     "ElectricityComparisonRecord",
     "ElectricityComparisonResponse",
+    "EmissionFactorBase",
+    "EmissionFactorCreate",
+    "EmissionFactorUpdate",
+    "EmissionFactorResponse",
+    "EmissionFactorListResponse",
+    "CarbonCalculationRequest",
+    "CarbonCalculationResponse",
+    "CarbonCalculationListResponse",
+    "CarbonRecalculateRequest",
 ]

@@ -480,4 +480,108 @@ export interface ElectricityComparisonResponse {
   net_variance_kwh?: number | null;
 }
 
+// Phase 5: Carbon Calculation Engine & Emission Factors
+export interface EmissionFactor {
+  id: string;
+  factor_code: string;
+  name: string;
+  category: string;
+  applicable_activity_code?: string | null;
+  fuel_or_material?: string | null;
+  scope: string; // scope_1, scope_2, scope_3
+  factor_value: number;
+  factor_unit: string;
+  target_activity_unit: string;
+  geography: string;
+  source_organization: string;
+  reference_document: string;
+  reference_url?: string | null;
+  publication_year: number;
+  applicable_reporting_year?: number | null;
+  effective_start_date: string;
+  effective_end_date?: string | null;
+  version: number;
+  calculation_methodology?: string | null;
+  status: string; // verified, provisional, retired
+  is_active: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface EmissionFactorListResponse {
+  items: EmissionFactor[];
+  total: number;
+}
+
+export interface CarbonCalculationRequest {
+  block_id: string;
+  reporting_date: string;
+  activity_code: string;
+  activity_record_id?: string;
+  electricity_source?: string; // auto, measured, estimated
+  custom_quantity?: number;
+  custom_unit?: string;
+  factor_id?: string;
+  notes?: string;
+}
+
+export interface CarbonCalculationResponse {
+  id: string;
+  organization_id: string;
+  campus_id: string;
+  block_id: string;
+  block_name?: string | null;
+  block_code?: string | null;
+  reporting_date: string;
+  reporting_period_end?: string | null;
+  activity_record_id?: string | null;
+  electricity_estimate_id?: string | null;
+  activity_code: string;
+  activity_category: string;
+  scope: string;
+  activity_data_type: string;
+  reported_quantity: number;
+  reported_unit: string;
+  standardized_quantity: number;
+  standardized_unit: string;
+  conversion_factor_applied: number;
+  conversion_steps?: string | null;
+  emission_factor_id?: string | null;
+  emission_factor_code: string;
+  emission_factor_version: number;
+  emission_factor_value: number;
+  emission_factor_unit: string;
+  emission_factor_source: string;
+  formula: string;
+  emissions_kg_co2e: number;
+  emissions_t_co2e: number;
+  selected_reporting_source: string;
+  selection_reason?: string | null;
+  baseline_id?: string | null;
+  baseline_version?: number | null;
+  is_superseded: boolean;
+  superseded_by_id?: string | null;
+  status: string;
+  version: number;
+  methodology_notes?: string | null;
+  validation_warnings?: string[] | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface CarbonCalculationListResponse {
+  items: CarbonCalculationResponse[];
+  total: number;
+  total_emissions_kg_co2e: number;
+  total_emissions_t_co2e: number;
+  by_scope: Record<string, number>;
+  by_category: Record<string, number>;
+}
+
+export interface CarbonRecalculateRequest {
+  new_factor_id?: string;
+  reason?: string;
+}
+
+
 

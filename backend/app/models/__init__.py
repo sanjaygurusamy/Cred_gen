@@ -6,6 +6,7 @@ from app.models.block import CampusBlock
 from app.models.activity import ActivityDefinition, BlockActivityAssignment
 from app.models.activity_record import DailyActivityRecord
 from app.models.baseline import ElectricityBaseline, ElectricityBaselineItem, DailyElectricityEstimate
+from app.models.carbon import EmissionFactor, CarbonCalculationRecord
 
 __all__ = [
     "Base",
@@ -18,4 +19,6 @@ __all__ = [
     "ElectricityBaseline",
     "ElectricityBaselineItem",
     "DailyElectricityEstimate",
+    "EmissionFactor",
+    "CarbonCalculationRecord",
 ]

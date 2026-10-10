@@ -6,7 +6,7 @@ import { DashboardPage } from './pages/DashboardPage';
 import { CampusBlocksPage } from './pages/CampusBlocksPage';
 import { ActivityDataPage } from './pages/ActivityDataPage';
 import { ElectricityPage } from './pages/ElectricityPage';
-import { CalculatorPage } from './pages/CalculatorPage';
+import { CarbonCalculationsPage } from './pages/CarbonCalculationsPage';
 import { MRVProjectsPage } from './pages/MRVProjectsPage';
 import { EvidencePage } from './pages/EvidencePage';
 import { VerificationPage } from './pages/VerificationPage';
@@ -25,7 +25,7 @@ export const App: React.FC = () => {
             <Route path="campus" element={<CampusBlocksPage />} />
             <Route path="activity" element={<ActivityDataPage />} />
             <Route path="electricity" element={<ElectricityPage />} />
-            <Route path="calculator" element={<CalculatorPage />} />
+            <Route path="calculator" element={<CarbonCalculationsPage />} />
             <Route path="mrv" element={<MRVProjectsPage />} />
             <Route path="evidence" element={<EvidencePage />} />
             <Route path="verification" element={<VerificationPage />} />
