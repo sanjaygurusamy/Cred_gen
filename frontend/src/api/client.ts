@@ -9,6 +9,14 @@ import {
   CategoryStat,
   BlockCreatePayload,
   BlockUpdatePayload,
+  ActivityDefinition,
+  BlockActivitiesSummary,
+  BlockActivityAssignment,
+  DailyActivityRecord,
+  DailyRecordCreatePayload,
+  DailyRecordUpdatePayload,
+  DailyRecordListResponse,
+  DailyRecordHistorySummary,
 } from '../types';
 
 const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000/api').replace(/\/$/, '');
@@ -110,12 +118,12 @@ async function request<T>(endpoint: string, options: RequestOptions = {}): Promi
 export const apiClient = {
   getBaseUrl: () => API_BASE_URL,
   
-  // Phase 1 System Diagnostics
+  // Phase 1: System Diagnostics
   getHealth: () => request<HealthResponse>('/health'),
   getReadiness: () => request<ReadinessResponse>('/ready'),
   getSystemInfo: () => request<SystemInfoResponse>('/info'),
 
-  // Phase 2 Organization & Campus Management
+  // Phase 2: Organization & Campus Management
   getOrganizations: () => request<Organization[]>('/v1/organizations'),
   
   getCampuses: (organizationId?: string) =>
@@ -136,7 +144,7 @@ export const apiClient = {
       category_counts: Record<string, number>;
     }>('/v1/campuses/seed', { method: 'POST' }),
 
-  // Phase 2 Blocks & Facility Inventory
+  // Phase 2: Blocks & Facility Inventory
   getBlocks: (params?: { campus_id?: string; category?: string; search?: string; is_active?: boolean }) =>
     request<BlockListResponse>('/v1/blocks', { params }),
 
@@ -154,4 +162,81 @@ export const apiClient = {
 
   getBlockCategories: (campusId?: string) =>
     request<CategoryStat[]>('/v1/blocks/categories', { params: { campus_id: campusId } }),
+
+  // Phase 3: Activity Catalogue & Block Assignments
+  getActivities: (params?: { category?: string; search?: string; is_enabled?: boolean }) =>
+    request<ActivityDefinition[]>('/v1/activities', { params }),
+
+  getActivityById: (activityId: string) =>
+    request<ActivityDefinition>(`/v1/activities/${activityId}`),
+
+  seedPhase3Catalogue: () =>
+    request<{
+      status: string;
+      activities_created: number;
+      activities_existing: number;
+      total_activities: number;
+      assignments_created: number;
+      assignments_existing: number;
+      total_assignments: number;
+    }>('/v1/activities/seed', { method: 'POST' }),
+
+  getBlockActivities: (blockId: string) =>
+    request<BlockActivitiesSummary>(`/v1/blocks/${blockId}/activities`),
+
+  assignBlockActivity: (
+    blockId: string,
+    payload: { activity_id: string; is_enabled?: boolean; custom_unit?: string; notes?: string }
+  ) =>
+    request<BlockActivityAssignment>(`/v1/blocks/${blockId}/activities`, {
+      method: 'POST',
+      body: payload,
+    }),
+
+  removeBlockActivity: (blockId: string, activityId: string) =>
+    request<{ message: string }>(`/v1/blocks/${blockId}/activities/${activityId}`, {
+      method: 'DELETE',
+    }),
+
+  // Phase 3: Daily Activity Records
+  getActivityRecords: (params?: {
+    block_id?: string;
+    activity_id?: string;
+    start_date?: string;
+    end_date?: string;
+    data_status?: string;
+    is_transfer?: boolean;
+    limit?: number;
+    offset?: number;
+  }) => request<DailyRecordListResponse>('/v1/activity-records', { params }),
+
+  getActivityRecordById: (recordId: string) =>
+    request<DailyActivityRecord>(`/v1/activity-records/${recordId}`),
+
+  createActivityRecord: (payload: DailyRecordCreatePayload) =>
+    request<DailyActivityRecord>('/v1/activity-records', {
+      method: 'POST',
+      body: payload,
+    }),
+
+  updateActivityRecord: (recordId: string, payload: DailyRecordUpdatePayload) =>
+    request<DailyActivityRecord>(`/v1/activity-records/${recordId}`, {
+      method: 'PUT',
+      body: payload,
+    }),
+
+  deleteActivityRecord: (recordId: string) =>
+    request<{ message: string }>(`/v1/activity-records/${recordId}`, {
+      method: 'DELETE',
+    }),
+
+  getActivityHistory: (
+    blockId: string,
+    activity_id: string,
+    params?: { start_date?: string; end_date?: string }
+  ) =>
+    request<DailyRecordHistorySummary>(
+      `/v1/activity-records/history/${blockId}/${activity_id}`,
+      { params }
+    ),
 };

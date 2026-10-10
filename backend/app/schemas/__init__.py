@@ -13,6 +13,15 @@ from app.schemas.block import (
     BlockResponse, BlockListResponse, CategoryStat,
     CATEGORY_DISPLAY_CONFIG
 )
+from app.schemas.activity import (
+    ActivityDefinitionBase, ActivityDefinitionCreate, ActivityDefinitionUpdate,
+    ActivityDefinitionResponse, BlockActivityAssignmentCreate,
+    BlockActivityAssignmentResponse, BlockActivitiesSummaryResponse
+)
+from app.schemas.activity_record import (
+    DailyRecordBase, DailyRecordCreate, DailyRecordUpdate,
+    DailyRecordResponse, DailyRecordListResponse, DailyRecordHistorySummary
+)
 
 __all__ = [
     "HealthResponse",
@@ -35,5 +44,18 @@ __all__ = [
     "BlockResponse",
     "BlockListResponse",
     "CategoryStat",
-    "CATEGORY_DISPLAY_CONFIG"
+    "CATEGORY_DISPLAY_CONFIG",
+    "ActivityDefinitionBase",
+    "ActivityDefinitionCreate",
+    "ActivityDefinitionUpdate",
+    "ActivityDefinitionResponse",
+    "BlockActivityAssignmentCreate",
+    "BlockActivityAssignmentResponse",
+    "BlockActivitiesSummaryResponse",
+    "DailyRecordBase",
+    "DailyRecordCreate",
+    "DailyRecordUpdate",
+    "DailyRecordResponse",
+    "DailyRecordListResponse",
+    "DailyRecordHistorySummary",
 ]
