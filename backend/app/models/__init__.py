@@ -5,6 +5,7 @@ from app.models.campus import Campus
 from app.models.block import CampusBlock
 from app.models.activity import ActivityDefinition, BlockActivityAssignment
 from app.models.activity_record import DailyActivityRecord
+from app.models.baseline import ElectricityBaseline, ElectricityBaselineItem, DailyElectricityEstimate
 
 __all__ = [
     "Base",
@@ -14,4 +15,7 @@ __all__ = [
     "ActivityDefinition",
     "BlockActivityAssignment",
     "DailyActivityRecord",
+    "ElectricityBaseline",
+    "ElectricityBaselineItem",
+    "DailyElectricityEstimate",
 ]

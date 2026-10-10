@@ -12,6 +12,7 @@ import {
   Settings,
   Leaf,
   X,
+  Zap,
 } from 'lucide-react';
 import { useSystemStatus } from '../../context/SystemStatusContext';
 
@@ -27,6 +28,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
     { label: 'Dashboard', path: '/', icon: LayoutDashboard },
     { label: 'Campus & Blocks', path: '/campus', icon: Building2, phaseTag: 'P2' },
     { label: 'Activity Data', path: '/activity', icon: Activity, phaseTag: 'P3' },
+    { label: 'Electricity & Baselines', path: '/electricity', icon: Zap, phaseTag: 'P4' },
     { label: 'Carbon Calculator', path: '/calculator', icon: Calculator, phaseTag: 'P5' },
     { label: 'MRV Projects', path: '/mrv', icon: Target, phaseTag: 'P7' },
     { label: 'Evidence & Documents', path: '/evidence', icon: FileText, phaseTag: 'P7' },

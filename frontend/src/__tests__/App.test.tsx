@@ -79,6 +79,7 @@ describe('CampusCarbon AI — Phase 1 Application Tests', () => {
       expect(screen.getByRole('link', { name: /Dashboard/i })).toBeInTheDocument();
       expect(screen.getByRole('link', { name: /Campus & Blocks/i })).toBeInTheDocument();
       expect(screen.getByRole('link', { name: /Activity Data/i })).toBeInTheDocument();
+      expect(screen.getByRole('link', { name: /Electricity & Baselines/i })).toBeInTheDocument();
       expect(screen.getByRole('link', { name: /Carbon Calculator/i })).toBeInTheDocument();
       expect(screen.getByRole('link', { name: /MRV Projects/i })).toBeInTheDocument();
       expect(screen.getByRole('link', { name: /Evidence & Documents/i })).toBeInTheDocument();

@@ -34,6 +34,9 @@ class DailyActivityRecord(Base):
     is_daily_total = Column(Boolean, default=True, nullable=False)
 
     source_reference = Column(String(255), nullable=True)  # meter ID, invoice no, vehicle reg, manifest ID
+    meter_start_reading = Column(Float, nullable=True)  # initial meter reading where applicable
+    meter_end_reading = Column(Float, nullable=True)  # final meter reading where applicable
+    meter_boundary = Column(String(64), nullable=True)  # grid_import | solar_generation | solar_consumption | solar_export | total_consumption
     destination_details = Column(String(255), nullable=True)  # recycler details, sludge destination
     is_transfer = Column(Boolean, default=False, nullable=False)  # transfer / dispatch vs primary generation
     notes = Column(Text, nullable=True)

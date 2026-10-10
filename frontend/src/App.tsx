@@ -5,6 +5,7 @@ import { AppLayout } from './components/layout/AppLayout';
 import { DashboardPage } from './pages/DashboardPage';
 import { CampusBlocksPage } from './pages/CampusBlocksPage';
 import { ActivityDataPage } from './pages/ActivityDataPage';
+import { ElectricityPage } from './pages/ElectricityPage';
 import { CalculatorPage } from './pages/CalculatorPage';
 import { MRVProjectsPage } from './pages/MRVProjectsPage';
 import { EvidencePage } from './pages/EvidencePage';
@@ -23,6 +24,7 @@ export const App: React.FC = () => {
             <Route path="dashboard" element={<Navigate to="/" replace />} />
             <Route path="campus" element={<CampusBlocksPage />} />
             <Route path="activity" element={<ActivityDataPage />} />
+            <Route path="electricity" element={<ElectricityPage />} />
             <Route path="calculator" element={<CalculatorPage />} />
             <Route path="mrv" element={<MRVProjectsPage />} />
             <Route path="evidence" element={<EvidencePage />} />

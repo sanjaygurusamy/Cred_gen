@@ -261,3 +261,223 @@ export interface DailyRecordHistorySummary {
   records: DailyActivityRecord[];
 }
 
+// Phase 4: Electricity Baselines, Estimation, and Comparison Types
+export interface ElectricityBaselineItem {
+  id: string;
+  baseline_id: string;
+  facility_type: string;
+  facility_name: string;
+  quantity: number;
+  average_power_kw: number;
+  default_operating_hours: number;
+  source_rationale?: string | null;
+  is_active: boolean;
+  order_index: number;
+  calculated_default_daily_kwh: number;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface ElectricityBaselineItemCreate {
+  facility_type: string;
+  facility_name: string;
+  quantity: number;
+  average_power_kw: number;
+  default_operating_hours: number;
+  source_rationale?: string;
+  is_active?: boolean;
+  order_index?: number;
+}
+
+export interface ElectricityBaseline {
+  id: string;
+  organization_id: string;
+  campus_id: string;
+  block_id: string;
+  block_name?: string | null;
+  block_code?: string | null;
+  version: number;
+  name: string;
+  description?: string | null;
+  source_rationale?: string | null;
+  effective_start_date: string;
+  effective_end_date?: string | null;
+  is_active: boolean;
+  items: ElectricityBaselineItem[];
+  total_default_daily_kwh: number;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface ElectricityBaselineCreatePayload {
+  block_id: string;
+  name?: string;
+  description?: string;
+  source_rationale?: string;
+  effective_start_date: string;
+  effective_end_date?: string;
+  items: ElectricityBaselineItemCreate[];
+}
+
+export interface ElectricityBaselineRevisionPayload {
+  name?: string;
+  description?: string;
+  source_rationale?: string;
+  effective_start_date: string;
+  effective_end_date?: string;
+  items: ElectricityBaselineItemCreate[];
+}
+
+export interface DailyEstimateItemInput {
+  facility_type: string;
+  facility_name: string;
+  quantity: number;
+  average_power_kw: number;
+  operating_hours: number;
+  source_rationale?: string;
+}
+
+export interface DailyEstimateItemResult {
+  facility_type: string;
+  facility_name: string;
+  quantity: number;
+  average_power_kw: number;
+  operating_hours: number;
+  estimated_kwh: number;
+  source_rationale?: string;
+}
+
+export interface DailyEstimateCalculateRequest {
+  block_id: string;
+  reporting_date: string;
+  operational_mode?: string;
+  is_holiday?: boolean;
+  is_zero_consumption?: boolean;
+  baseline_id?: string;
+  custom_items?: DailyEstimateItemInput[];
+}
+
+export interface DailyEstimatePreviewResponse {
+  block_id: string;
+  block_name?: string | null;
+  reporting_date: string;
+  baseline_id?: string | null;
+  baseline_version: number;
+  operational_mode: string;
+  is_holiday: boolean;
+  is_zero_consumption: boolean;
+  items: DailyEstimateItemResult[];
+  total_estimated_kwh: number;
+}
+
+export interface DailyElectricityEstimateCreatePayload {
+  block_id: string;
+  reporting_date: string;
+  baseline_id?: string;
+  operational_mode?: string;
+  is_holiday?: boolean;
+  is_zero_consumption?: boolean;
+  notes?: string;
+  items: DailyEstimateItemInput[];
+  replace_existing?: boolean;
+}
+
+export interface DailyElectricityEstimate {
+  id: string;
+  organization_id: string;
+  campus_id: string;
+  block_id: string;
+  block_name?: string | null;
+  block_code?: string | null;
+  baseline_id?: string | null;
+  baseline_version: number;
+  reporting_date: string;
+  total_estimated_kwh: number;
+  is_holiday: boolean;
+  is_zero_consumption: boolean;
+  operational_mode: string;
+  notes?: string | null;
+  calculation_details: DailyEstimateItemResult[];
+  version: number;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface ActualElectricityRecordCreatePayload {
+  block_id: string;
+  reporting_date: string;
+  quantity_kwh: number;
+  meter_boundary?: string;
+  measurement_method?: string;
+  source_reference?: string;
+  meter_start_reading?: number;
+  meter_end_reading?: number;
+  reading_identifier?: string;
+  notes?: string;
+  replace_existing?: boolean;
+}
+
+export interface ActualElectricityRecord {
+  id: string;
+  block_id: string;
+  block_name?: string | null;
+  block_code?: string | null;
+  reporting_date: string;
+  quantity_kwh: number;
+  meter_boundary: string;
+  measurement_method: string;
+  source_reference?: string | null;
+  meter_start_reading?: number | null;
+  meter_end_reading?: number | null;
+  reading_identifier: string;
+  data_status: string;
+  notes?: string | null;
+  version: number;
+  created_at: string;
+}
+
+export interface ElectricityComparisonRecord {
+  block_id: string;
+  block_name: string;
+  block_code: string;
+  reporting_date: string;
+  has_estimate: boolean;
+  estimated_kwh?: number | null;
+  baseline_version?: number | null;
+  operational_mode?: string | null;
+  is_holiday: boolean;
+  is_zero_consumption: boolean;
+  estimate_notes?: string | null;
+  has_actual: boolean;
+  actual_kwh?: number | null;
+  meter_boundary?: string | null;
+  measurement_method?: string | null;
+  source_reference?: string | null;
+  actual_notes?: string | null;
+  difference_kwh?: number | null;
+  percentage_difference?: number | null;
+  recommended_reporting_value?: number | null;
+  recommended_reporting_source: string;
+  status: string;
+  solar_generation_kwh?: number | null;
+  solar_export_kwh?: number | null;
+}
+
+export interface ElectricityComparisonResponse {
+  block_id?: string;
+  block_name?: string;
+  block_code?: string;
+  start_date?: string;
+  end_date?: string;
+  records: ElectricityComparisonRecord[];
+  total_days: number;
+  matched_days: number;
+  estimated_only_days: number;
+  actual_only_days: number;
+  missing_days: number;
+  total_estimated_kwh: number;
+  total_actual_kwh: number;
+  net_variance_kwh?: number | null;
+}
+
+

@@ -17,6 +17,16 @@ import {
   DailyRecordUpdatePayload,
   DailyRecordListResponse,
   DailyRecordHistorySummary,
+  ElectricityBaseline,
+  ElectricityBaselineCreatePayload,
+  ElectricityBaselineRevisionPayload,
+  DailyEstimateCalculateRequest,
+  DailyEstimatePreviewResponse,
+  DailyElectricityEstimate,
+  DailyElectricityEstimateCreatePayload,
+  ActualElectricityRecord,
+  ActualElectricityRecordCreatePayload,
+  ElectricityComparisonResponse,
 } from '../types';
 
 const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000/api').replace(/\/$/, '');
@@ -239,4 +249,77 @@ export const apiClient = {
       `/v1/activity-records/history/${blockId}/${activity_id}`,
       { params }
     ),
+
+  // Phase 4: Electricity Baselines & Estimates
+  getFacilityTypes: () =>
+    request<{ categories: Record<string, any[]> }>('/v1/electricity/facility-types'),
+
+  getBaselines: (params?: { block_id?: string; is_active?: boolean }) =>
+    request<ElectricityBaseline[]>('/v1/electricity/baselines', { params }),
+
+  getBaselineForBlock: (blockId: string, asOfDate?: string) =>
+    request<ElectricityBaseline>(`/v1/electricity/baselines/block/${blockId}`, {
+      params: asOfDate ? { as_of_date: asOfDate } : undefined,
+    }),
+
+  getBaselineVersionsForBlock: (blockId: string) =>
+    request<ElectricityBaseline[]>(`/v1/electricity/baselines/block/${blockId}/versions`),
+
+  getBaselineById: (baselineId: string) =>
+    request<ElectricityBaseline>(`/v1/electricity/baselines/${baselineId}`),
+
+  createBaseline: (payload: ElectricityBaselineCreatePayload) =>
+    request<ElectricityBaseline>('/v1/electricity/baselines', {
+      method: 'POST',
+      body: payload,
+    }),
+
+  reviseBaseline: (baselineId: string, payload: ElectricityBaselineRevisionPayload) =>
+    request<ElectricityBaseline>(`/v1/electricity/baselines/${baselineId}/revise`, {
+      method: 'POST',
+      body: payload,
+    }),
+
+  seedBaselines: () =>
+    request<{ created_baselines: number; created_items: number; skipped_blocks: number }>(
+      '/v1/electricity/baselines/seed',
+      { method: 'POST' }
+    ),
+
+  calculateDailyEstimatePreview: (payload: DailyEstimateCalculateRequest) =>
+    request<DailyEstimatePreviewResponse>('/v1/electricity/estimates/calculate', {
+      method: 'POST',
+      body: payload,
+    }),
+
+  createDailyEstimate: (payload: DailyElectricityEstimateCreatePayload) =>
+    request<DailyElectricityEstimate>('/v1/electricity/estimates', {
+      method: 'POST',
+      body: payload,
+    }),
+
+  getDailyEstimates: (params?: {
+    block_id?: string;
+    start_date?: string;
+    end_date?: string;
+    limit?: number;
+    offset?: number;
+  }) =>
+    request<DailyElectricityEstimate[]>('/v1/electricity/estimates', { params }),
+
+  getDailyEstimateByDate: (blockId: string, reportingDate: string) =>
+    request<DailyElectricityEstimate>(`/v1/electricity/estimates/block/${blockId}/date/${reportingDate}`),
+
+  recordActualElectricity: (payload: ActualElectricityRecordCreatePayload) =>
+    request<ActualElectricityRecord>('/v1/electricity/actual', {
+      method: 'POST',
+      body: payload,
+    }),
+
+  getElectricityComparison: (params: {
+    block_id: string;
+    start_date: string;
+    end_date: string;
+  }) =>
+    request<ElectricityComparisonResponse>('/v1/electricity/comparison', { params }),
 };

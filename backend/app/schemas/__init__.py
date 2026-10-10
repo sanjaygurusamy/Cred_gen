@@ -22,6 +22,14 @@ from app.schemas.activity_record import (
     DailyRecordBase, DailyRecordCreate, DailyRecordUpdate,
     DailyRecordResponse, DailyRecordListResponse, DailyRecordHistorySummary
 )
+from app.schemas.electricity import (
+    ElectricityBaselineItemBase, ElectricityBaselineItemCreate, ElectricityBaselineItemResponse,
+    ElectricityBaselineCreate, ElectricityBaselineRevision, ElectricityBaselineResponse,
+    DailyEstimateItemInput, DailyEstimateItemResult, DailyEstimateCalculateRequest,
+    DailyEstimatePreviewResponse, DailyElectricityEstimateCreate, DailyElectricityEstimateResponse,
+    ActualElectricityRecordCreate, ActualElectricityRecordResponse,
+    ElectricityComparisonRecord, ElectricityComparisonResponse
+)
 
 __all__ = [
     "HealthResponse",
@@ -58,4 +66,20 @@ __all__ = [
     "DailyRecordResponse",
     "DailyRecordListResponse",
     "DailyRecordHistorySummary",
+    "ElectricityBaselineItemBase",
+    "ElectricityBaselineItemCreate",
+    "ElectricityBaselineItemResponse",
+    "ElectricityBaselineCreate",
+    "ElectricityBaselineRevision",
+    "ElectricityBaselineResponse",
+    "DailyEstimateItemInput",
+    "DailyEstimateItemResult",
+    "DailyEstimateCalculateRequest",
+    "DailyEstimatePreviewResponse",
+    "DailyElectricityEstimateCreate",
+    "DailyElectricityEstimateResponse",
+    "ActualElectricityRecordCreate",
+    "ActualElectricityRecordResponse",
+    "ElectricityComparisonRecord",
+    "ElectricityComparisonResponse",
 ]
