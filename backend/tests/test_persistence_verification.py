@@ -52,11 +52,8 @@ def test_postgresql_live_persistence_and_restart():
             assert result[1] == test_payload
             assert result[2] == test_timestamp
 
-            # Clean up verification record
-            conn.execute(
-                text("DELETE FROM _phase1_persistence_check WHERE id = :id"),
-                {"id": test_id}
-            )
+            # Clean up verification table
+            conn.execute(text("DROP TABLE IF EXISTS _phase1_persistence_check"))
             conn.commit()
     finally:
         engine2.dispose()
