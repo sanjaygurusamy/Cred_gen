@@ -54,17 +54,17 @@ def log(tag: str, msg: str, color: str = CYAN):
     ts = time.strftime("%H:%M:%S")
     print(f"{DIM}{ts}{RESET} {color}[{tag}]{RESET} {msg}", flush=True)
 
-def log_ok(msg: str):
-    log("OK", msg, GREEN)
+def log_ok(msg: str, color: str = GREEN):
+    log("OK", msg, color)
 
-def log_info(msg: str):
-    log("INFO", msg, CYAN)
+def log_info(msg: str, color: str = CYAN):
+    log("INFO", msg, color)
 
-def log_warn(msg: str):
-    log("WARN", msg, YELLOW)
+def log_warn(msg: str, color: str = YELLOW):
+    log("WARN", msg, color)
 
-def log_err(msg: str):
-    log("ERROR", msg, RED)
+def log_err(msg: str, color: str = RED):
+    log("ERROR", msg, color)
 
 def print_banner():
     banner = f"""{BOLD}{CYAN}
