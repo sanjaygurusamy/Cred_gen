@@ -41,6 +41,14 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSidebar }) => {
       title: 'Trees, Plantations & Carbon Sequestration',
       subtitle: 'Campus tree census, green space inventory, and allometric carbon absorption',
     },
+    '/sustainability': {
+      title: 'Institutional Sustainability & UN SDG Framework',
+      subtitle: 'Operational alignment, decarbonization interventions, and institutional evidence',
+    },
+    '/sdgs': {
+      title: 'Institutional Sustainability & UN SDG Framework',
+      subtitle: 'Operational alignment, decarbonization interventions, and institutional evidence',
+    },
     '/mrv': {
       title: 'Digital MRV Reduction Projects',
       subtitle: 'Intervention pipelines and outcome verification records',
@@ -64,10 +72,25 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSidebar }) => {
   };
 
   const normalizedPath = location.pathname.replace(/\/+$/, '') || '/';
-  const currentMeta = routeMeta[normalizedPath] || routeMeta[location.pathname] || {
-    title: 'Page Not Found',
-    subtitle: 'The requested route does not exist in this application',
-  };
+  
+  // Resolve route metadata: exact match, then nested route prefix match (longest prefix first)
+  let currentMeta = routeMeta[normalizedPath] || routeMeta[location.pathname];
+  if (!currentMeta && normalizedPath !== '/') {
+    const matchedKey = Object.keys(routeMeta)
+      .filter((k) => k !== '/')
+      .sort((a, b) => b.length - a.length)
+      .find((k) => normalizedPath.startsWith(k));
+    if (matchedKey) {
+      currentMeta = routeMeta[matchedKey];
+    }
+  }
+
+  if (!currentMeta) {
+    currentMeta = {
+      title: 'Page Not Found',
+      subtitle: 'The requested route does not exist in this application',
+    };
+  }
 
   return (
     <header className="h-20 border-b border-slate-800 bg-slate-900/60 backdrop-blur-md sticky top-0 z-30 px-4 sm:px-6 lg:px-8 flex items-center justify-between">

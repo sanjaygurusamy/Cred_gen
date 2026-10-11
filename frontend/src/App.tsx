@@ -30,6 +30,7 @@ export const App: React.FC = () => {
             <Route path="calculator" element={<CarbonCalculationsPage />} />
             <Route path="trees" element={<TreesPage />} />
             <Route path="sustainability" element={<SustainabilityPage />} />
+            <Route path="sdgs" element={<Navigate to="/sustainability" replace />} />
             <Route path="mrv" element={<MRVProjectsPage />} />
             <Route path="evidence" element={<EvidencePage />} />
             <Route path="verification" element={<VerificationPage />} />

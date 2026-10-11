@@ -17,6 +17,7 @@ import {
   Info,
 } from 'lucide-react';
 import { apiClient } from '../api/client';
+import { SDGEmblem } from '../components/common/SDGEmblem';
 import {
   SustainabilitySummary,
   SDGItem,
@@ -365,22 +366,26 @@ export const SustainabilityPage: React.FC = () => {
                     className="p-5 rounded-xl bg-slate-950 border border-slate-800/80 hover:border-slate-700 transition-all flex flex-col justify-between group shadow-sm"
                   >
                     <div>
-                      {/* SDG Header Pill */}
-                      <div className="flex items-center justify-between mb-3">
-                        <span
-                          className="px-2.5 py-1 rounded-lg text-xs font-bold text-white shadow-sm"
-                          style={{ backgroundColor: borderHex }}
-                        >
-                          SDG {s.sdg_number}
-                        </span>
-                        <span className="text-[11px] font-medium text-slate-400">
-                          {s.targets?.length || 0} Targets Mapped
+                      {/* SDG Header & Visual Emblem */}
+                      <div className="flex items-start justify-between gap-3 mb-3">
+                        <div className="flex items-center space-x-3">
+                          <SDGEmblem sdgNumber={s.sdg_number} size="md" />
+                          <div>
+                            <span
+                              className="px-2 py-0.5 rounded text-[10px] font-bold text-white shadow-sm inline-block"
+                              style={{ backgroundColor: borderHex }}
+                            >
+                              SDG {s.sdg_number}
+                            </span>
+                            <h4 className="text-sm font-semibold text-slate-200 group-hover:text-emerald-400 transition-colors mt-1">
+                              {s.title}
+                            </h4>
+                          </div>
+                        </div>
+                        <span className="text-[11px] font-medium text-slate-400 shrink-0">
+                          {s.targets?.length || 0} Targets
                         </span>
                       </div>
-
-                      <h4 className="text-sm font-semibold text-slate-200 group-hover:text-emerald-400 transition-colors">
-                        {s.title}
-                      </h4>
 
                       <p className="text-xs text-slate-400 mt-2 line-clamp-3 leading-relaxed">
                         {s.institutional_relevance}
@@ -708,16 +713,22 @@ export const SustainabilityPage: React.FC = () => {
         <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
           <div className="bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-2xl shadow-xl overflow-hidden animate-in fade-in zoom-in-95 max-h-[90vh] flex flex-col">
             <div className="px-6 py-4 border-b border-slate-800 flex items-center justify-between">
-              <div className="flex items-center space-x-3">
-                <span
-                  className="px-2.5 py-1 rounded-lg text-xs font-bold text-white"
-                  style={{ backgroundColor: getSdgColor(selectedSdg.sdg_number) }}
-                >
-                  SDG {selectedSdg.sdg_number}
-                </span>
-                <h3 className="text-base font-semibold text-slate-100">
-                  {selectedSdg.title}
-                </h3>
+              <div className="flex items-center space-x-3.5">
+                <SDGEmblem sdgNumber={selectedSdg.sdg_number} size="sm" />
+                <div>
+                  <div className="flex items-center space-x-2">
+                    <span
+                      className="px-2 py-0.5 rounded text-[10px] font-bold text-white"
+                      style={{ backgroundColor: getSdgColor(selectedSdg.sdg_number) }}
+                    >
+                      SDG {selectedSdg.sdg_number}
+                    </span>
+                    <span className="text-xs text-slate-400 font-medium">UN Agenda 2030</span>
+                  </div>
+                  <h3 className="text-base font-semibold text-slate-100 mt-0.5">
+                    {selectedSdg.title}
+                  </h3>
+                </div>
               </div>
               <button
                 onClick={() => setSelectedSdg(null)}

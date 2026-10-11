@@ -18,6 +18,7 @@ import {
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { apiClient } from '../api/client';
+import { SDGEmblem } from '../components/common/SDGEmblem';
 import { useSystemStatus } from '../context/SystemStatusContext';
 import {
   DashboardMetricsResponse,
@@ -702,13 +703,8 @@ export const DashboardPage: React.FC = () => {
                   >
                     <div className="space-y-2">
                       <div className="flex items-center justify-between">
-                        <div className="flex items-center space-x-2.5">
-                          <div
-                            className="w-8 h-8 rounded-lg flex items-center justify-center font-bold font-mono text-white text-xs shadow-md"
-                            style={{ backgroundColor: sdg.theme_color }}
-                          >
-                            {sdg.sdg_number}
-                          </div>
+                        <div className="flex items-center space-x-3">
+                          <SDGEmblem sdgNumber={sdg.sdg_number} size="sm" />
                           <div>
                             <span className="text-xs font-bold text-slate-100 block">
                               SDG {sdg.sdg_number}: {sdg.short_name}
