@@ -583,5 +583,160 @@ export interface CarbonRecalculateRequest {
   reason?: string;
 }
 
+// =============================================================================
+// Phase 6: Campus Carbon Dashboard & Reporting Engine Types
+// =============================================================================
+
+export interface DashboardMetricsResponse {
+  reporting_period_start?: string | null;
+  reporting_period_end?: string | null;
+  total_emissions_kg_co2e: number;
+  total_emissions_t_co2e: number;
+  scope_1_kg: number;
+  scope_1_t: number;
+  scope_2_kg: number;
+  scope_2_t: number;
+  scope_3_kg: number;
+  scope_3_t: number;
+  total_electricity_kwh: number;
+  actual_electricity_kwh: number;
+  estimated_electricity_kwh: number;
+  total_records: number;
+  measured_records: number;
+  estimated_records: number;
+  measured_coverage_pct: number;
+  active_blocks_count: number;
+  reporting_blocks_count: number;
+  reporting_coverage_pct: number;
+  has_data: boolean;
+}
+
+export interface CategoryEmissionsItem {
+  category: string;
+  category_name: string;
+  scope: string;
+  emissions_kg_co2e: number;
+  emissions_t_co2e: number;
+  percentage_of_total: number;
+  record_count: number;
+  measured_count: number;
+  estimated_count: number;
+}
+
+export interface CategoryEmissionsResponse {
+  items: CategoryEmissionsItem[];
+  total_emissions_kg_co2e: number;
+  total_emissions_t_co2e: number;
+  by_scope: Record<string, number>;
+}
+
+export interface BlockEmissionsItem {
+  block_id: string;
+  block_name: string;
+  block_code: string;
+  block_category: string;
+  floor_area_sqm: number;
+  occupant_capacity: number;
+  total_emissions_kg_co2e: number;
+  total_emissions_t_co2e: number;
+  emissions_per_sqm: number;
+  emissions_per_occupant?: number | null;
+  percentage_of_campus: number;
+  electricity_kwh: number;
+  record_count: number;
+  measured_pct: number;
+  scope_1_kg: number;
+  scope_2_kg: number;
+  scope_3_kg: number;
+  has_data: boolean;
+}
+
+export interface BlockEmissionsResponse {
+  items: BlockEmissionsItem[];
+  total_campus_emissions_t_co2e: number;
+  blocks_reporting_count: number;
+  blocks_total_count: number;
+}
+
+export interface TrendPoint {
+  period: string;
+  date?: string | null;
+  total_emissions_kg_co2e: number;
+  total_emissions_t_co2e: number;
+  scope_1_kg: number;
+  scope_2_kg: number;
+  scope_3_kg: number;
+  electricity_kwh: number;
+  measured_count: number;
+  estimated_count: number;
+}
+
+export interface TrendsResponse {
+  group_by: string;
+  data_points: TrendPoint[];
+  sufficient_data_for_trend: boolean;
+  total_points: number;
+}
+
+export interface BlockDetailAnalyticsResponse {
+  block: CampusBlock;
+  total_emissions_kg_co2e: number;
+  total_emissions_t_co2e: number;
+  emissions_per_sqm: number;
+  scope_1_kg: number;
+  scope_2_kg: number;
+  scope_3_kg: number;
+  electricity_kwh: number;
+  activities_breakdown: Array<{
+    activity_code: string;
+    category: string;
+    scope: string;
+    reported_quantity: number;
+    reported_unit: string;
+    standardized_quantity: number;
+    standardized_unit: string;
+    emissions_kg_co2e: number;
+    emission_factor_code: string;
+    record_count: number;
+  }>;
+  configured_expected_activities: string[];
+  missing_expected_activities: string[];
+  records_count: number;
+  measured_records: number;
+  estimated_records: number;
+}
+
+export interface DataQualityResponse {
+  total_campus_blocks: number;
+  blocks_with_data_count: number;
+  blocks_missing_data_count: number;
+  blocks_with_missing_expectations: Array<{
+    block_id: string;
+    block_name: string;
+    block_code: string;
+    block_category: string;
+    missing_activities: Array<{
+      activity_code: string;
+      activity_name: string;
+      category: string;
+      default_unit: string;
+    }>;
+  }>;
+  measured_records_count: number;
+  estimated_records_count: number;
+  uncalculated_activity_records_count: number;
+  uncalculated_records_details: Array<{
+    activity_record_id: string;
+    block_id: string;
+    reporting_date: string;
+    quantity: number;
+    unit: string;
+    is_transfer: boolean;
+    reason: string;
+  }>;
+  safeguard_checks: Record<string, boolean>;
+}
+
+
 
 

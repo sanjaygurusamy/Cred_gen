@@ -36,6 +36,13 @@ from app.schemas.carbon import (
     CarbonCalculationRequest, CarbonCalculationResponse,
     CarbonCalculationListResponse, CarbonRecalculateRequest
 )
+from app.schemas.reporting import (
+    ReportingPeriodFilter, DashboardMetricsResponse,
+    CategoryEmissionsItem, CategoryEmissionsResponse,
+    BlockEmissionsItem, BlockEmissionsResponse,
+    TrendPoint, TrendsResponse,
+    BlockDetailAnalyticsResponse, DataQualityResponse,
+)
 
 __all__ = [
     "HealthResponse",
@@ -97,4 +104,14 @@ __all__ = [
     "CarbonCalculationResponse",
     "CarbonCalculationListResponse",
     "CarbonRecalculateRequest",
+    "ReportingPeriodFilter",
+    "DashboardMetricsResponse",
+    "CategoryEmissionsItem",
+    "CategoryEmissionsResponse",
+    "BlockEmissionsItem",
+    "BlockEmissionsResponse",
+    "TrendPoint",
+    "TrendsResponse",
+    "BlockDetailAnalyticsResponse",
+    "DataQualityResponse",
 ]

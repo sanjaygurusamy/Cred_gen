@@ -33,6 +33,12 @@ import {
   CarbonCalculationResponse,
   CarbonCalculationListResponse,
   CarbonRecalculateRequest,
+  DashboardMetricsResponse,
+  CategoryEmissionsResponse,
+  BlockEmissionsResponse,
+  TrendsResponse,
+  BlockDetailAnalyticsResponse,
+  DataQualityResponse,
 } from '../types';
 
 const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000/api').replace(/\/$/, '');
@@ -377,4 +383,90 @@ export const apiClient = {
       method: 'POST',
       body: payload || {},
     }),
+
+  // Phase 6: Campus Carbon Dashboard & Reporting Engine
+  getDashboardMetrics: (params?: {
+    start_date?: string;
+    end_date?: string;
+    campus_id?: string;
+    block_id?: string;
+  }) => request<DashboardMetricsResponse>('/v1/reporting/dashboard', { params }),
+
+  getEmissionsByCategory: (params?: {
+    start_date?: string;
+    end_date?: string;
+    block_id?: string;
+  }) => request<CategoryEmissionsResponse>('/v1/reporting/by-category', { params }),
+
+  getEmissionsByBlock: (params?: {
+    start_date?: string;
+    end_date?: string;
+    category?: string;
+  }) => request<BlockEmissionsResponse>('/v1/reporting/by-block', { params }),
+
+  getEmissionsTrends: (params?: {
+    start_date?: string;
+    end_date?: string;
+    block_id?: string;
+    group_by?: 'day' | 'month';
+  }) => request<TrendsResponse>('/v1/reporting/trends', { params }),
+
+  getBlockDetailAnalytics: (blockId: string, params?: {
+    start_date?: string;
+    end_date?: string;
+  }) => request<BlockDetailAnalyticsResponse>(`/v1/reporting/block/${blockId}`, { params }),
+
+  getDataQuality: (params?: {
+    start_date?: string;
+    end_date?: string;
+  }) => request<DataQualityResponse>('/v1/reporting/data-quality', { params }),
+
+  downloadCsvReport: async (params?: { start_date?: string; end_date?: string; block_id?: string }) => {
+    const query = new URLSearchParams();
+    if (params?.start_date) query.set('start_date', params.start_date);
+    if (params?.end_date) query.set('end_date', params.end_date);
+    if (params?.block_id) query.set('block_id', params.block_id);
+    const qStr = query.toString();
+    const url = `${API_BASE_URL}/v1/reporting/export/csv${qStr ? `?${qStr}` : ''}`;
+    
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new ApiError(response.status, 'Failed to download CSV report');
+    }
+    const blob = await response.blob();
+    const filename = `campuscarbon_audit_${params?.start_date || 'all'}_${params?.end_date || 'all'}.csv`;
+    const downloadUrl = window.URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = downloadUrl;
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    window.URL.revokeObjectURL(downloadUrl);
+  },
+
+  downloadPdfReport: async (params?: { start_date?: string; end_date?: string; block_id?: string }) => {
+    const query = new URLSearchParams();
+    if (params?.start_date) query.set('start_date', params.start_date);
+    if (params?.end_date) query.set('end_date', params.end_date);
+    if (params?.block_id) query.set('block_id', params.block_id);
+    const qStr = query.toString();
+    const url = `${API_BASE_URL}/v1/reporting/export/pdf${qStr ? `?${qStr}` : ''}`;
+    
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new ApiError(response.status, 'Failed to download PDF executive report');
+    }
+    const blob = await response.blob();
+    const filename = `campuscarbon_executive_report_${params?.start_date || 'all'}_${params?.end_date || 'all'}.pdf`;
+    const downloadUrl = window.URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = downloadUrl;
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    window.URL.revokeObjectURL(downloadUrl);
+  },
 };
+
