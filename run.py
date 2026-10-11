@@ -233,6 +233,28 @@ def run_migrations():
     except Exception as e:
         log_warn(f"Could not run alembic migrations: {e}")
 
+def ensure_seed_data():
+    """Ensure baseline inventory and multi-day demo data are seeded idempotently."""
+    try:
+        sys_path_saved = list(sys.path)
+        if str(BACKEND_DIR) not in sys.path:
+            sys.path.insert(0, str(BACKEND_DIR))
+        from app.core.database import get_session_factory
+        from app.services.seed_demo_data import seed_14_day_demo_data
+        db = get_session_factory()()
+        try:
+            log_info("Verifying multi-day campus demonstration data...")
+            res = seed_14_day_demo_data(db)
+            if res.get("activity_records_created", 0) > 0:
+                log_ok(f"Demonstration data initialized: {res['activity_records_created']} records across 14 days.")
+            else:
+                log_ok(f"Demonstration dataset verified ({res.get('days_covered', 14)} days active in DB).")
+        finally:
+            db.close()
+            sys.path = sys_path_saved
+    except Exception as e:
+        log_warn(f"Demonstration seed check skipped: {e}")
+
 # ---------------------------------------------------------------------------
 # Service Runners & Log Streaming
 # ---------------------------------------------------------------------------
@@ -395,8 +417,9 @@ def main():
         ensure_docker()
     ensure_postgres(skip_docker=args.no_docker)
 
-    # Step 2: Alembic Migrations
+    # Step 2: Alembic Migrations & Demonstration Seed Verification
     run_migrations()
+    ensure_seed_data()
 
     # Step 3: Port checks & cleanup
     if args.restart:
