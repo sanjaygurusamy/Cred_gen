@@ -95,48 +95,92 @@ $$\text{Score} = 0.35 \times S_{\text{reduction}} + 0.25 \times S_{\text{confide
 
 ---
 
-## 🚀 Quickstart Guide
+## 🚀 Quickstart Guide (One-Click Launch)
 
-### 1. Requirements
-- Python 3.11+ (Python 3.13 supported)
-- Node.js 18+ (Node v22.17 supported)
+### Prerequisites
+- **Python 3.10+** (Python 3.12 / 3.13)
+- **Node.js 18+** (Node.js 20 / 22)
+- **Docker Desktop** (for PostgreSQL 16 container)
 
-### 2. Backend Setup & Run
+---
+
+### Option A: One-Click Startup (Recommended)
+
+#### On Windows:
+Double-click `start.bat` in File Explorer, or run in PowerShell / Command Prompt:
 ```powershell
-# Navigate to backend directory
-cd backend
+.\start.bat
+# or in PowerShell:
+.\start.ps1
+```
 
-# Install dependencies
-python -m pip install -r requirements.txt
+#### On Linux / macOS / WSL:
+```bash
+chmod +x start.sh stop.sh
+./start.sh
+```
 
-# Configure environment variables (optional; defaults to rule-based fallback if no key provided)
-copy .env.example .env
-
-# Run FastAPI server
+#### Cross-Platform Python Orchestrator:
+```bash
 python run.py
 ```
-Backend API will be running on `http://127.0.0.1:8000`.  
-Interactive Swagger API documentation: `http://127.0.0.1:8000/docs`.
 
-### 3. Frontend Setup & Run
+The orchestrator automatically:
+1. Connects to or launches Docker Desktop and starts the PostgreSQL 16 container (`campuscarbon_postgres`).
+2. Validates database connectivity and runs any pending Alembic migrations.
+3. Spawns the FastAPI backend (port 8000) and Vite frontend (port 5173).
+4. Verifies health probes on all endpoints.
+5. Automatically opens `http://localhost:5173` in your default browser.
+6. Gracefully shuts down all processes when you press `Ctrl+C`.
+
+---
+
+### Useful CLI Commands
+
 ```powershell
-# In another terminal, navigate to frontend directory
-cd frontend
+# Check live health status of all components:
+python run.py --status
+# or: .\start.ps1 -Status
 
-# Install npm dependencies
-npm.cmd install
+# Force-restart any lingering services:
+python run.py --restart
+# or: .\start.ps1 -Restart
 
-# Start Vite development server
-npm.cmd run dev
+# Stop running backend and frontend services:
+.\stop.bat
+# or in PowerShell: .\stop.ps1
+# or: python run.py --stop
+
+# Stop all services including the PostgreSQL Docker container:
+python run.py --stop-all
+# or: .\stop.ps1 -All
 ```
-Frontend development UI will be running on `http://localhost:3000`.
 
-*Note: The FastAPI backend also automatically serves the compiled frontend bundle directly at `http://127.0.0.1:8000/`.*
+---
 
-### 4. Running the Automated Test Suite
-To run all 20 automated tests covering all 17 required categories:
+### Service URLs
+
+| Service | URL | Description |
+| :--- | :--- | :--- |
+| **Frontend Web App** | `http://localhost:5173` | React 18 + TypeScript + Vite UI |
+| **Backend REST API** | `http://localhost:8000` | FastAPI server & calculation engine |
+| **Interactive API Docs** | `http://localhost:8000/docs` | Swagger UI documentation |
+| **PostgreSQL Database** | `localhost:5432` | Container `campuscarbon_postgres` |
+
+---
+
+### Automated Testing
+
+To run the complete verification suites:
 ```powershell
-python -m pytest backend -v -W ignore::DeprecationWarning
+# Backend pytest suite (65 tests)
+python -m pytest backend/tests -v
+
+# Frontend vitest suite (43 tests)
+cd frontend && npm.cmd test -- --run
+
+# TypeScript production build check
+cd frontend && npm.cmd run build
 ```
 
 ---
