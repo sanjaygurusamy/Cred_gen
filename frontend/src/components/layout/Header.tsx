@@ -17,6 +17,10 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSidebar }) => {
       title: 'Institutional Sustainability Dashboard',
       subtitle: 'System readiness telemetry and campus decarbonization status',
     },
+    '/dashboard': {
+      title: 'Institutional Sustainability Dashboard',
+      subtitle: 'System readiness telemetry and campus decarbonization status',
+    },
     '/campus': {
       title: 'Campus & Blocks Management',
       subtitle: 'Facility hierarchy, floor area inventory, and zone allocation',
@@ -24,6 +28,10 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSidebar }) => {
     '/activity': {
       title: 'Daily Activity Telemetry',
       subtitle: 'Operational energy, water, waste, and transport logs',
+    },
+    '/electricity': {
+      title: 'Electricity Baselines & MRV Telemetry',
+      subtitle: 'Database-backed baseline profiles, daily estimation, and variance tracking',
     },
     '/calculator': {
       title: 'GHG Protocol Carbon Calculator',
@@ -51,7 +59,8 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSidebar }) => {
     },
   };
 
-  const currentMeta = routeMeta[location.pathname] || {
+  const normalizedPath = location.pathname.replace(/\/+$/, '') || '/';
+  const currentMeta = routeMeta[normalizedPath] || routeMeta[location.pathname] || {
     title: 'Page Not Found',
     subtitle: 'The requested route does not exist in this application',
   };

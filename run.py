@@ -46,7 +46,14 @@ BOLD = "\033[1m"
 DIM = "\033[2m"
 RESET = "\033[0m"
 
-ROOT_DIR = Path(__file__).resolve().parent
+script_dir = Path(__file__).resolve().parent
+if (script_dir / "backend").exists():
+    ROOT_DIR = script_dir
+elif (script_dir.parent / "backend").exists():
+    ROOT_DIR = script_dir.parent
+else:
+    ROOT_DIR = script_dir
+
 BACKEND_DIR = ROOT_DIR / "backend"
 FRONTEND_DIR = ROOT_DIR / "frontend"
 
