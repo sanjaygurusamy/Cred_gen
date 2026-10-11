@@ -14,6 +14,7 @@ import {
   Server,
   Database,
   Trees,
+  Globe2,
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { apiClient } from '../api/client';
@@ -27,6 +28,7 @@ import {
   DataQualityResponse,
   CampusBlock,
   SequestrationSummary,
+  SDGItem,
 } from '../types';
 
 export const DashboardPage: React.FC = () => {
@@ -50,6 +52,7 @@ export const DashboardPage: React.FC = () => {
   const [trends, setTrends] = useState<TrendsResponse | null>(null);
   const [blockDetail, setBlockDetail] = useState<BlockDetailAnalyticsResponse | null>(null);
   const [dataQuality, setDataQuality] = useState<DataQualityResponse | null>(null);
+  const [sdgs, setSdgs] = useState<SDGItem[]>([]);
 
   // UI state
   const [loading, setLoading] = useState<boolean>(true);
@@ -94,13 +97,14 @@ export const DashboardPage: React.FC = () => {
         end_date: endDate || undefined,
       };
 
-      const [metricsRes, catRes, blkRes, trendsRes, qualityRes, treeRes] = await Promise.all([
+      const [metricsRes, catRes, blkRes, trendsRes, qualityRes, treeRes, sdgRes] = await Promise.all([
         apiClient.getDashboardMetrics(params),
         apiClient.getEmissionsByCategory(params),
         apiClient.getEmissionsByBlock(params),
         apiClient.getEmissionsTrends({ ...params, group_by: trendGroupBy }),
         apiClient.getDataQuality(params),
         apiClient.getTreesSummary(),
+        apiClient.getCampusSDGs().catch(() => []),
       ]);
 
       setMetrics(metricsRes);
@@ -109,6 +113,7 @@ export const DashboardPage: React.FC = () => {
       setTrends(trendsRes);
       setDataQuality(qualityRes);
       setTreeSummary(treeRes);
+      setSdgs(sdgRes);
     } catch (err: any) {
       setErrorMsg(err.message || 'Failed to fetch campus carbon dashboard metrics');
     } finally {
@@ -658,6 +663,86 @@ export const DashboardPage: React.FC = () => {
             ) : (
               <div className="p-4 text-center text-slate-400 text-xs">
                 <span>No tree inventory data available.</span>
+              </div>
+            )}
+          </div>
+
+          {/* UN Sustainable Development Goals (SDG) Alignment & Indicators */}
+          <div className="bg-slate-900 border border-slate-800 rounded-xl p-5 space-y-4">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-3 border-b border-slate-800 gap-2">
+              <div className="flex items-center space-x-2">
+                <Globe2 className="w-5 h-5 text-emerald-400" />
+                <div>
+                  <h3 className="text-sm font-semibold text-slate-100 flex items-center space-x-2">
+                    <span>UN Sustainable Development Goals (SDG) Alignment</span>
+                    <span className="px-2 py-0.5 rounded-full text-[10px] font-mono bg-blue-500/10 text-blue-300 border border-blue-500/20">
+                      {sdgs.length} Active Goals
+                    </span>
+                  </h3>
+                  <p className="text-xs text-slate-400">
+                    Institutional environmental telemetrics mapped to United Nations Agenda 2030 sustainability frameworks.
+                  </p>
+                </div>
+              </div>
+              <Link
+                to="/sustainability"
+                className="inline-flex items-center space-x-1.5 text-xs text-emerald-400 hover:text-emerald-300 font-semibold transition-colors"
+              >
+                <span>View Comprehensive SDG Analytics</span>
+                <span>→</span>
+              </Link>
+            </div>
+
+            {sdgs.length > 0 ? (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5">
+                {sdgs.map((sdg) => (
+                  <div
+                    key={sdg.sdg_number}
+                    className="bg-slate-950 border border-slate-800/90 hover:border-slate-700 rounded-xl p-4 space-y-3 transition-colors flex flex-col justify-between"
+                  >
+                    <div className="space-y-2">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center space-x-2.5">
+                          <div
+                            className="w-8 h-8 rounded-lg flex items-center justify-center font-bold font-mono text-white text-xs shadow-md"
+                            style={{ backgroundColor: sdg.theme_color }}
+                          >
+                            {sdg.sdg_number}
+                          </div>
+                          <div>
+                            <span className="text-xs font-bold text-slate-100 block">
+                              SDG {sdg.sdg_number}: {sdg.short_name}
+                            </span>
+                            <span className="text-[10px] text-slate-400 block line-clamp-1">
+                              {sdg.title}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <p className="text-[11px] text-slate-400 leading-relaxed line-clamp-2">
+                        {sdg.institutional_relevance}
+                      </p>
+                    </div>
+
+                    <div className="pt-2 border-t border-slate-800/80 flex items-center justify-between text-[10px]">
+                      <span className="text-slate-500 font-mono">
+                        {sdg.targets?.length || 0} Targets Tracked
+                      </span>
+                      <Link
+                        to="/sustainability"
+                        className="text-emerald-400 hover:text-emerald-300 font-medium inline-flex items-center space-x-1"
+                      >
+                        <span>Targets</span>
+                        <span>→</span>
+                      </Link>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="p-4 text-center text-slate-400 text-xs">
+                <span>Loading UN SDG mappings...</span>
               </div>
             )}
           </div>

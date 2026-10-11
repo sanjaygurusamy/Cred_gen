@@ -242,16 +242,31 @@ def calculate_emissions(
     elif activity_code == "ELEC_CONSUMPTION":
         # Phase 4 Electricity Integration
         # Check actual utility meter reading
-        actual_rec = (
-            db.query(DailyActivityRecord)
-            .filter(
-                DailyActivityRecord.block_id == block_id,
-                DailyActivityRecord.activity_id == act_def.id if act_def else None,
-                DailyActivityRecord.reporting_date == reporting_date,
-                DailyActivityRecord.reading_identifier == "official_daily_total",
+        actual_rec = None
+        if activity_record_id:
+            actual_rec = db.query(DailyActivityRecord).filter(DailyActivityRecord.id == activity_record_id).first()
+        if not actual_rec:
+            actual_rec = (
+                db.query(DailyActivityRecord)
+                .filter(
+                    DailyActivityRecord.block_id == block_id,
+                    DailyActivityRecord.activity_id == act_def.id if act_def else None,
+                    DailyActivityRecord.reporting_date == reporting_date,
+                    DailyActivityRecord.reading_identifier == "official_daily_total",
+                )
+                .first()
             )
-            .first()
-        )
+        if not actual_rec:
+            actual_rec = (
+                db.query(DailyActivityRecord)
+                .filter(
+                    DailyActivityRecord.block_id == block_id,
+                    DailyActivityRecord.activity_id == act_def.id if act_def else None,
+                    DailyActivityRecord.reporting_date == reporting_date,
+                )
+                .order_by(desc(DailyActivityRecord.version))
+                .first()
+            )
 
         # Check estimated electricity record
         est_rec = (
@@ -273,7 +288,7 @@ def calculate_emissions(
             reported_qty = actual_rec.quantity
             reported_unit = actual_rec.unit
             activity_data_type = "actual_electricity"
-            selected_reporting_source = "measured"
+            selected_reporting_source = actual_rec.data_status or "measured"
             selection_reason = (
                 f"Official utility meter reading selected as primary measured value "
                 f"({actual_rec.meter_boundary or 'grid_import'})."
@@ -304,7 +319,7 @@ def calculate_emissions(
                 reported_qty = actual_rec.quantity
                 reported_unit = actual_rec.unit
                 activity_data_type = "actual_electricity"
-                selected_reporting_source = "measured"
+                selected_reporting_source = actual_rec.data_status or "measured"
                 selection_reason = (
                     f"Official utility meter reading selected (preferred measured value). "
                     f"Boundary: {actual_rec.meter_boundary or 'grid_import'}."

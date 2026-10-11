@@ -88,18 +88,21 @@ class ReportingEngine:
         ]
         actual_elec_kwh = sum(
             r.standardized_quantity for r in elec_records
-            if r.activity_data_type == "actual_meter" or r.selected_reporting_source == "actual_meter"
+            if r.activity_data_type in ("actual_meter", "actual_electricity")
+            or r.selected_reporting_source in ("actual_meter", "measured")
         )
         estimated_elec_kwh = sum(
             r.standardized_quantity for r in elec_records
-            if r.activity_data_type == "estimated_baseline" or r.selected_reporting_source == "estimated"
+            if r.activity_data_type in ("estimated_baseline", "estimated_electricity")
+            or r.selected_reporting_source in ("estimated_baseline", "estimated")
         )
         total_elec_kwh = actual_elec_kwh + estimated_elec_kwh
 
         # Coverage and data quality
         measured_recs = sum(
             1 for r in records
-            if r.selected_reporting_source in ("measured", "actual_meter") or r.activity_data_type in ("actual_meter", "direct_measurement")
+            if r.selected_reporting_source in ("measured", "actual_meter")
+            or r.activity_data_type in ("actual_meter", "direct_measurement", "actual_electricity", "actual_activity")
         )
         estimated_recs = len(records) - measured_recs
         measured_pct = round((measured_recs / len(records) * 100.0), 1) if records else 0.0
@@ -358,7 +361,7 @@ class ReportingEngine:
             if r.activity_category == "electricity" or r.activity_code in ("ELEC_CONSUMPTION", "SOLAR_ELEC_GEN"):
                 b["electricity_kwh"] += r.standardized_quantity
 
-            if r.selected_reporting_source in ("measured", "actual_meter") or r.activity_data_type in ("actual_meter", "direct_measurement"):
+            if r.selected_reporting_source in ("measured", "actual_meter") or r.activity_data_type in ("actual_meter", "direct_measurement", "actual_electricity", "actual_activity"):
                 b["measured_count"] += 1
             else:
                 b["estimated_count"] += 1
@@ -427,7 +430,7 @@ class ReportingEngine:
 
         measured_count = sum(
             1 for r in records
-            if r.selected_reporting_source in ("measured", "actual_meter") or r.activity_data_type in ("actual_meter", "direct_measurement")
+            if r.selected_reporting_source in ("measured", "actual_meter") or r.activity_data_type in ("actual_meter", "direct_measurement", "actual_electricity", "actual_activity")
         )
         estimated_count = len(records) - measured_count
 
@@ -550,7 +553,7 @@ class ReportingEngine:
 
         measured_count = sum(
             1 for r in records
-            if r.selected_reporting_source in ("measured", "actual_meter") or r.activity_data_type in ("actual_meter", "direct_measurement")
+            if r.selected_reporting_source in ("measured", "actual_meter") or r.activity_data_type in ("actual_meter", "direct_measurement", "actual_electricity", "actual_activity")
         )
         estimated_count = len(records) - measured_count
 
