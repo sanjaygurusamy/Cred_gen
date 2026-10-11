@@ -13,7 +13,9 @@ import {
   CheckCircle2,
   Server,
   Database,
+  Trees,
 } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { apiClient } from '../api/client';
 import { useSystemStatus } from '../context/SystemStatusContext';
 import {
@@ -24,6 +26,7 @@ import {
   BlockDetailAnalyticsResponse,
   DataQualityResponse,
   CampusBlock,
+  SequestrationSummary,
 } from '../types';
 
 export const DashboardPage: React.FC = () => {
@@ -43,6 +46,7 @@ export const DashboardPage: React.FC = () => {
   const [metrics, setMetrics] = useState<DashboardMetricsResponse | null>(null);
   const [categories, setCategories] = useState<CategoryEmissionsResponse | null>(null);
   const [blockEmissions, setBlockEmissions] = useState<BlockEmissionsResponse | null>(null);
+  const [treeSummary, setTreeSummary] = useState<SequestrationSummary | null>(null);
   const [trends, setTrends] = useState<TrendsResponse | null>(null);
   const [blockDetail, setBlockDetail] = useState<BlockDetailAnalyticsResponse | null>(null);
   const [dataQuality, setDataQuality] = useState<DataQualityResponse | null>(null);
@@ -90,12 +94,13 @@ export const DashboardPage: React.FC = () => {
         end_date: endDate || undefined,
       };
 
-      const [metricsRes, catRes, blkRes, trendsRes, qualityRes] = await Promise.all([
+      const [metricsRes, catRes, blkRes, trendsRes, qualityRes, treeRes] = await Promise.all([
         apiClient.getDashboardMetrics(params),
         apiClient.getEmissionsByCategory(params),
         apiClient.getEmissionsByBlock(params),
         apiClient.getEmissionsTrends({ ...params, group_by: trendGroupBy }),
         apiClient.getDataQuality(params),
+        apiClient.getTreesSummary(),
       ]);
 
       setMetrics(metricsRes);
@@ -103,6 +108,7 @@ export const DashboardPage: React.FC = () => {
       setBlockEmissions(blkRes);
       setTrends(trendsRes);
       setDataQuality(qualityRes);
+      setTreeSummary(treeRes);
     } catch (err: any) {
       setErrorMsg(err.message || 'Failed to fetch campus carbon dashboard metrics');
     } finally {
@@ -549,6 +555,111 @@ export const DashboardPage: React.FC = () => {
                 </div>
               )}
             </div>
+          </div>
+
+          {/* Campus Tree Sequestration & Living Green Canopy (Biological Sink) */}
+          <div className="bg-slate-900 border border-slate-800 rounded-xl p-5 space-y-4">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-3 border-b border-slate-800 gap-2">
+              <div className="flex items-center space-x-2">
+                <Trees className="w-5 h-5 text-emerald-400" />
+                <div>
+                  <h3 className="text-sm font-semibold text-slate-100 flex items-center space-x-2">
+                    <span>Campus Trees & Biological Carbon Sequestration</span>
+                    <span className="px-2 py-0.5 rounded-full text-[10px] font-mono bg-emerald-500/10 text-emerald-300 border border-emerald-500/20">
+                      Biological Sink
+                    </span>
+                  </h3>
+                  <p className="text-xs text-slate-400">
+                    Living biomass carbon absorption calculated via IPCC AFOLU & FSI allometric models (segregated from gross compliance emissions).
+                  </p>
+                </div>
+              </div>
+              <Link
+                to="/trees"
+                className="inline-flex items-center space-x-1.5 text-xs text-emerald-400 hover:text-emerald-300 font-semibold transition-colors"
+              >
+                <span>Explore Trees & Plantation</span>
+                <span>→</span>
+              </Link>
+            </div>
+
+            {treeSummary ? (
+              <div className="space-y-4">
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                  <div className="bg-slate-950 border border-slate-800 p-3 rounded-lg">
+                    <span className="text-[10px] text-slate-400 uppercase font-mono block">Catalogued Trees</span>
+                    <span className="text-lg font-bold font-mono text-emerald-400">
+                      {treeSummary.total_trees.toLocaleString()}
+                    </span>
+                    <span className="text-[10px] text-slate-400 block">
+                      Across {treeSummary.total_species_count} species
+                    </span>
+                  </div>
+
+                  <div className="bg-slate-950 border border-slate-800 p-3 rounded-lg">
+                    <span className="text-[10px] text-slate-400 uppercase font-mono block">Annual Absorption</span>
+                    <span className="text-lg font-bold font-mono text-emerald-400">
+                      {treeSummary.total_annual_sequestration_t_co2e.toLocaleString()} t CO₂e/yr
+                    </span>
+                    <span className="text-[10px] text-slate-400 block font-mono">
+                      {treeSummary.total_annual_sequestration_kg_co2e.toLocaleString()} kg/yr
+                    </span>
+                  </div>
+
+                  <div className="bg-slate-950 border border-slate-800 p-3 rounded-lg">
+                    <span className="text-[10px] text-slate-400 uppercase font-mono block">Dedicated Green Spaces</span>
+                    <span className="text-lg font-bold font-mono text-cyan-400">
+                      {treeSummary.total_green_spaces} zones
+                    </span>
+                    <span className="text-[10px] text-slate-400 block font-mono">
+                      {treeSummary.total_green_space_area_sqm.toLocaleString()} m² area
+                    </span>
+                  </div>
+
+                  <div className="bg-slate-950 border border-slate-800 p-3 rounded-lg">
+                    <span className="text-[10px] text-slate-400 uppercase font-mono block">Plantation Survival</span>
+                    <span className="text-lg font-bold font-mono text-amber-400">
+                      {treeSummary.average_survival_rate_percent}%
+                    </span>
+                    <span className="text-[10px] text-slate-400 block">
+                      {treeSummary.total_saplings_surviving} of {treeSummary.total_saplings_planted} saplings
+                    </span>
+                  </div>
+                </div>
+
+                {treeSummary.species_breakdown && treeSummary.species_breakdown.length > 0 && (
+                  <div className="pt-2">
+                    <div className="text-xs font-semibold text-slate-300 mb-2 flex items-center justify-between">
+                      <span>Top Absorbing Species on Campus</span>
+                      <span className="text-[10px] text-slate-400 font-mono">Ranked by annual carbon intake</span>
+                    </div>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
+                      {treeSummary.species_breakdown.slice(0, 6).map((sp) => (
+                        <div
+                          key={sp.species_name}
+                          className="bg-slate-950 border border-slate-800/80 rounded-lg p-2.5 flex items-center justify-between"
+                        >
+                          <div>
+                            <div className="text-xs font-semibold text-slate-200">{sp.common_name}</div>
+                            <div className="text-[10px] italic text-slate-400">{sp.species_name} ({sp.tree_count} trees)</div>
+                          </div>
+                          <div className="text-right">
+                            <span className="text-xs font-bold font-mono text-emerald-400 block">
+                              {sp.annual_sequestration_t.toFixed(2)} t
+                            </span>
+                            <span className="text-[10px] text-slate-400 font-mono">{sp.percentage_of_total}%</span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <div className="p-4 text-center text-slate-400 text-xs">
+                <span>No tree inventory data available.</span>
+              </div>
+            )}
           </div>
         </div>
       )}

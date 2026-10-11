@@ -37,6 +37,10 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSidebar }) => {
       title: 'GHG Protocol Carbon Calculator',
       subtitle: 'Deterministic emission calculations with approved factors',
     },
+    '/trees': {
+      title: 'Trees, Plantations & Carbon Sequestration',
+      subtitle: 'Campus tree census, green space inventory, and allometric carbon absorption',
+    },
     '/mrv': {
       title: 'Digital MRV Reduction Projects',
       subtitle: 'Intervention pipelines and outcome verification records',

@@ -737,6 +737,108 @@ export interface DataQualityResponse {
   safeguard_checks: Record<string, boolean>;
 }
 
+// ---------------------------------------------------------------------------
+// Trees, Green Spaces & Carbon Sequestration Types
+// ---------------------------------------------------------------------------
+
+export interface GreenSpace {
+  id: string;
+  campus_id: string;
+  block_id?: string | null;
+  name: string;
+  code: string;
+  plantation_type: string;
+  area_sqm?: number | null;
+  area_unit: string;
+  description?: string | null;
+  is_active: boolean;
+  tree_count: number;
+  annual_sequestration_kg: number;
+  block_name?: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface TreeInventory {
+  id: string;
+  campus_id: string;
+  block_id?: string | null;
+  green_space_id?: string | null;
+  species_name: string;
+  common_name: string;
+  tree_count: number;
+  planting_year?: number | null;
+  estimated_age_years?: number | null;
+  health_status: string;
+  location_description?: string | null;
+  data_source: string;
+  verification_status: string;
+  sequestration_rate_kg_year: number;
+  annual_sequestration_kg: number;
+  annual_sequestration_t: number;
+  methodology_notes?: string | null;
+  notes?: string | null;
+  block_name?: string | null;
+  green_space_name?: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface PlantationRecord {
+  id: string;
+  campus_id: string;
+  block_id?: string | null;
+  green_space_id?: string | null;
+  event_name: string;
+  plantation_date: string;
+  species_planted: string;
+  saplings_planted: number;
+  saplings_surviving: number;
+  survival_rate_percent: number;
+  plantation_location: string;
+  maintenance_notes?: string | null;
+  block_name?: string | null;
+  green_space_name?: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface SpeciesSequestrationBreakdown {
+  common_name: string;
+  species_name: string;
+  tree_count: number;
+  annual_sequestration_kg: number;
+  annual_sequestration_t: number;
+  percentage_of_total: number;
+}
+
+export interface GreenSpaceSummaryBreakdown {
+  id: string;
+  name: string;
+  code: string;
+  plantation_type: string;
+  area_sqm?: number | null;
+  tree_count: number;
+  annual_sequestration_kg: number;
+}
+
+export interface SequestrationSummary {
+  total_trees: number;
+  total_species_count: number;
+  total_green_spaces: number;
+  total_green_space_area_sqm: number;
+  total_annual_sequestration_kg_co2e: number;
+  total_annual_sequestration_t_co2e: number;
+  total_saplings_planted: number;
+  total_saplings_surviving: number;
+  average_survival_rate_percent: number;
+  methodology: string;
+  methodology_assumptions: string;
+  species_breakdown: SpeciesSequestrationBreakdown[];
+  green_space_breakdown: GreenSpaceSummaryBreakdown[];
+  data_quality_label: string;
+}
+
 
 
 

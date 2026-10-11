@@ -39,6 +39,10 @@ import {
   TrendsResponse,
   BlockDetailAnalyticsResponse,
   DataQualityResponse,
+  GreenSpace,
+  TreeInventory,
+  PlantationRecord,
+  SequestrationSummary,
 } from '../types';
 
 const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000/api').replace(/\/$/, '');
@@ -468,5 +472,33 @@ export const apiClient = {
     link.remove();
     window.URL.revokeObjectURL(downloadUrl);
   },
+
+  // Trees, Plantations & Carbon Sequestration
+  getTreesSummary: (campusId?: string) =>
+    request<SequestrationSummary>('/v1/trees/summary', { params: campusId ? { campus_id: campusId } : undefined }),
+
+  getTreeInventory: (params?: { campus_id?: string; block_id?: string }) =>
+    request<TreeInventory[]>('/v1/trees/inventory', { params }),
+
+  createTreeInventory: (payload: Partial<TreeInventory>) =>
+    request<TreeInventory>('/v1/trees/inventory', { method: 'POST', body: payload }),
+
+  updateTreeInventory: (treeId: string, payload: Partial<TreeInventory>) =>
+    request<TreeInventory>(`/v1/trees/inventory/${treeId}`, { method: 'PUT', body: payload }),
+
+  deleteTreeInventory: (treeId: string) =>
+    request<void>(`/v1/trees/inventory/${treeId}`, { method: 'DELETE' }),
+
+  getPlantationRecords: (campusId?: string) =>
+    request<PlantationRecord[]>('/v1/trees/plantations', { params: campusId ? { campus_id: campusId } : undefined }),
+
+  createPlantationRecord: (payload: Partial<PlantationRecord>) =>
+    request<PlantationRecord>('/v1/trees/plantations', { method: 'POST', body: payload }),
+
+  getGreenSpaces: (campusId?: string) =>
+    request<GreenSpace[]>('/v1/trees/green-spaces', { params: campusId ? { campus_id: campusId } : undefined }),
+
+  createGreenSpace: (payload: Partial<GreenSpace>) =>
+    request<GreenSpace>('/v1/trees/green-spaces', { method: 'POST', body: payload }),
 };
 
