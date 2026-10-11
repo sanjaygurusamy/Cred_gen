@@ -43,6 +43,10 @@ import {
   TreeInventory,
   PlantationRecord,
   SequestrationSummary,
+  SDGItem,
+  SustainabilityRecommendationItem,
+  InstitutionalEvidenceItem,
+  SustainabilitySummary,
 } from '../types';
 
 const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000/api').replace(/\/$/, '');
@@ -66,7 +70,7 @@ export class ApiNetworkError extends Error {
 }
 
 interface RequestOptions {
-  method?: 'GET' | 'POST' | 'PUT' | 'DELETE';
+  method?: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';
   body?: unknown;
   params?: Record<string, string | number | boolean | undefined | null>;
   timeoutMs?: number;
@@ -500,5 +504,27 @@ export const apiClient = {
 
   createGreenSpace: (payload: Partial<GreenSpace>) =>
     request<GreenSpace>('/v1/trees/green-spaces', { method: 'POST', body: payload }),
+
+  // Sustainability, SDGs, Recommendations & Evidence
+  getSustainabilitySummary: (campusId?: string) =>
+    request<SustainabilitySummary>('/v1/sustainability/summary', { params: campusId ? { campus_id: campusId } : undefined }),
+
+  getCampusSDGs: () =>
+    request<SDGItem[]>('/v1/sustainability/sdgs'),
+
+  getRecommendations: (params?: { campus_id?: string; category?: string; status?: string }) =>
+    request<SustainabilityRecommendationItem[]>('/v1/sustainability/recommendations', { params }),
+
+  updateRecommendationStatus: (recId: string, status: string) =>
+    request<SustainabilityRecommendationItem>(`/v1/sustainability/recommendations/${recId}/status`, {
+      method: 'PATCH',
+      body: { status },
+    }),
+
+  getInstitutionalEvidence: (params?: { campus_id?: string; category?: string; status?: string }) =>
+    request<InstitutionalEvidenceItem[]>('/v1/sustainability/evidence', { params }),
+
+  createInstitutionalEvidence: (payload: Partial<InstitutionalEvidenceItem>) =>
+    request<InstitutionalEvidenceItem>('/v1/sustainability/evidence', { method: 'POST', body: payload }),
 };
 

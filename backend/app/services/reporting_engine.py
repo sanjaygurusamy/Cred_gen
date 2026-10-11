@@ -953,8 +953,100 @@ class ReportingEngine:
         story.append(block_table)
         story.append(Spacer(1, 12))
 
-        # 6. Audit & Methodology Disclaimers
-        story.append(Paragraph("5. MRV Data Quality & Institutional Limitations", h2_style))
+        # 5. Trees & Biological Sequestration
+        from app.services.tree_service import TreeService
+        try:
+            tree_summary = TreeService(db).get_sequestration_summary().model_dump()
+        except Exception:
+            tree_summary = {}
+        story.append(Paragraph("5. Campus Trees, Green Canopy & Biological Carbon Sinks", h2_style))
+        tree_text = (
+            f"<b>Total Standing Trees:</b> {tree_summary.get('total_trees', 0):,} catalogued specimens across {tree_summary.get('total_species_count', 0)} indigenous species.<br/>"
+            f"<b>Designated Green Canopy:</b> {tree_summary.get('total_green_space_area_sqm', 0.0):,.0f} m² across {tree_summary.get('total_green_spaces', 0)} botanical and Miyawaki zones.<br/>"
+            f"<b>Annual Carbon Sequestration:</b> <b>{tree_summary.get('total_annual_sequestration_t_co2e', 0.0):,.2f} t CO₂e/year</b> "
+            f"({tree_summary.get('total_annual_sequestration_kg_co2e', 0.0):,.0f} kg/yr) calculated via IPCC AFOLU Vol 4 & FSI allometric models.<br/>"
+            f"<b>Plantation Survival Rate:</b> {tree_summary.get('average_survival_rate_percent', 0.0):.1f}% ({tree_summary.get('total_saplings_surviving', 0)} of {tree_summary.get('total_saplings_planted', 0)} saplings thriving).<br/>"
+            f"<i>*Note: Living biomass sequestration is reported as an isolated ecological sink and is strictly segregated from compliance Scope 1, 2, and 3 emissions.</i>"
+        )
+        story.append(Paragraph(tree_text, cell_style))
+        story.append(Spacer(1, 10))
+
+        # 6. UN Sustainable Development Goals (SDG) & Priority Recommendations
+        from app.services.sustainability_service import SustainabilityService
+        recs = SustainabilityService.list_recommendations(db)[:5]
+        story.append(Paragraph("6. UN SDG Alignment & Priority Decarbonization Recommendations", h2_style))
+        rec_data = [
+            [
+                Paragraph("<b>Category</b>", cell_bold),
+                Paragraph("<b>Recommendation Title</b>", cell_bold),
+                Paragraph("<b>Related SDGs</b>", cell_bold),
+                Paragraph("<b>Potential CO₂e Saving</b>", cell_bold),
+                Paragraph("<b>Status</b>", cell_bold),
+            ]
+        ]
+        if recs:
+            for r in recs:
+                sdg_tags = ", ".join([f"SDG {s}" for s in r.get("related_sdgs", [])])
+                saving = f"{r.get('potential_co2e_reduction_t_year', 0.0):,.2f} t/yr" if r.get("potential_co2e_reduction_t_year") else "Process Enabler"
+                rec_data.append([
+                    Paragraph(r.get("category", "").replace("_", " ").title(), cell_style),
+                    Paragraph(f"<b>{r.get('title', '')}</b>", cell_style),
+                    Paragraph(sdg_tags, cell_style),
+                    Paragraph(saving, cell_style),
+                    Paragraph(r.get("status", "").replace("_", " ").upper(), cell_style),
+                ])
+        else:
+            rec_data.append([Paragraph("No active recommendations loaded", cell_style)] * 5)
+
+        rec_table = Table(rec_data, colWidths=[90, 200, 80, 90, 80])
+        rec_table.setStyle(TableStyle([
+            ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor("#f1f5f9")),
+            ('BOX', (0, 0), (-1, -1), 0.5, colors.HexColor("#cbd5e1")),
+            ('INNERGRID', (0, 0), (-1, -1), 0.5, colors.HexColor("#e2e8f0")),
+            ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
+            ('TOPPADDING', (0, 0), (-1, -1), 4),
+            ('BOTTOMPADDING', (0, 0), (-1, -1), 4),
+        ]))
+        story.append(rec_table)
+        story.append(Spacer(1, 10))
+
+        # 7. Institutional Assessment Evidence (NIRF / NAAC)
+        evidence_items = SustainabilityService.list_evidence(db)[:4]
+        story.append(Paragraph("7. Institutional Assessment Evidence Registry (NIRF & NAAC Criteria)", h2_style))
+        evi_data = [
+            [
+                Paragraph("<b>Reference No.</b>", cell_bold),
+                Paragraph("<b>Evidence Title & Document Scope</b>", cell_bold),
+                Paragraph("<b>Framework Tags</b>", cell_bold),
+                Paragraph("<b>Verification</b>", cell_bold),
+            ]
+        ]
+        if evidence_items:
+            for ev in evidence_items:
+                tags = ", ".join(ev.get("framework_tags", []))
+                evi_data.append([
+                    Paragraph(f"<b>{ev.get('reference_number', '')}</b>", cell_style),
+                    Paragraph(ev.get("title", ""), cell_style),
+                    Paragraph(tags, cell_style),
+                    Paragraph(ev.get("verification_status", "").upper(), cell_style),
+                ])
+        else:
+            evi_data.append([Paragraph("No institutional evidence registered", cell_style)] * 4)
+
+        evi_table = Table(evi_data, colWidths=[120, 240, 100, 80])
+        evi_table.setStyle(TableStyle([
+            ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor("#f1f5f9")),
+            ('BOX', (0, 0), (-1, -1), 0.5, colors.HexColor("#cbd5e1")),
+            ('INNERGRID', (0, 0), (-1, -1), 0.5, colors.HexColor("#e2e8f0")),
+            ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
+            ('TOPPADDING', (0, 0), (-1, -1), 4),
+            ('BOTTOMPADDING', (0, 0), (-1, -1), 4),
+        ]))
+        story.append(evi_table)
+        story.append(Spacer(1, 12))
+
+        # 8. Audit & Methodology Disclaimers
+        story.append(Paragraph("8. MRV Data Quality & Institutional Limitations", h2_style))
         disclaimer_text = (
             "<b>Institutional Safeguards Enforced:</b> Vehicle distance logs (km) are excluded from direct fuel calculations without verified fuel consumption. "
             "Gross generator output is isolated from fuel emissions to prevent double-counting. Internal waste transfer movements and STP wastewater volumes "

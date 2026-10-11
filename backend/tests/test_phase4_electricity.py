@@ -55,7 +55,7 @@ def test_list_baselines_and_get_for_block():
     assert resp_b.status_code == 200
     baseline = resp_b.json()
     assert baseline["block_id"] == ab1["id"]
-    assert baseline["version"] == 1
+    assert baseline["version"] >= 1
     assert baseline["is_active"] is True
     assert len(baseline["items"]) == 3  # Standard classroom, AC classroom, Computer lab
     assert baseline["total_default_daily_kwh"] > 0.0

@@ -99,6 +99,12 @@ export const CampusBlocksPage: React.FC = () => {
   const [formDescription, setFormDescription] = useState<string>('');
   const [formFloorArea, setFormFloorArea] = useState<string>('');
   const [formCapacity, setFormCapacity] = useState<string>('');
+  const [formFloors, setFormFloors] = useState<string>('');
+  const [formClassrooms, setFormClassrooms] = useState<string>('');
+  const [formLabs, setFormLabs] = useState<string>('');
+  const [formOperatingHours, setFormOperatingHours] = useState<string>('');
+  const [formCurrentOccupancy, setFormCurrentOccupancy] = useState<string>('');
+  const [formVerificationStatus, setFormVerificationStatus] = useState<string>('awaiting_verification');
 
   const loadData = useCallback(async () => {
     setIsLoading(true);
@@ -169,6 +175,12 @@ export const CampusBlocksPage: React.FC = () => {
     setFormDescription('');
     setFormFloorArea('');
     setFormCapacity('');
+    setFormFloors('');
+    setFormClassrooms('');
+    setFormLabs('');
+    setFormOperatingHours('');
+    setFormCurrentOccupancy('');
+    setFormVerificationStatus('awaiting_verification');
     setFormError(null);
     setIsCreateOpen(true);
   };
@@ -182,6 +194,12 @@ export const CampusBlocksPage: React.FC = () => {
     setFormDescription(b.description || '');
     setFormFloorArea(b.floor_area_sqm ? String(b.floor_area_sqm) : '');
     setFormCapacity(b.occupant_capacity ? String(b.occupant_capacity) : '');
+    setFormFloors(b.floors_count !== null && b.floors_count !== undefined ? String(b.floors_count) : '');
+    setFormClassrooms(b.classrooms_count !== null && b.classrooms_count !== undefined ? String(b.classrooms_count) : '');
+    setFormLabs(b.laboratories_count !== null && b.laboratories_count !== undefined ? String(b.laboratories_count) : '');
+    setFormOperatingHours(b.operating_hours_per_day !== null && b.operating_hours_per_day !== undefined ? String(b.operating_hours_per_day) : '');
+    setFormCurrentOccupancy(b.current_occupancy !== null && b.current_occupancy !== undefined ? String(b.current_occupancy) : '');
+    setFormVerificationStatus(b.verification_status || 'awaiting_verification');
     setFormError(null);
   };
 
@@ -205,6 +223,12 @@ export const CampusBlocksPage: React.FC = () => {
         description: formDescription.trim() || undefined,
         floor_area_sqm: formFloorArea ? parseFloat(formFloorArea) : undefined,
         occupant_capacity: formCapacity ? parseInt(formCapacity, 10) : undefined,
+        floors_count: formFloors ? parseInt(formFloors, 10) : undefined,
+        classrooms_count: formClassrooms ? parseInt(formClassrooms, 10) : undefined,
+        laboratories_count: formLabs ? parseInt(formLabs, 10) : undefined,
+        operating_hours_per_day: formOperatingHours ? parseFloat(formOperatingHours) : undefined,
+        current_occupancy: formCurrentOccupancy ? parseInt(formCurrentOccupancy, 10) : undefined,
+        verification_status: formVerificationStatus,
         is_active: true,
       };
 
@@ -238,6 +262,12 @@ export const CampusBlocksPage: React.FC = () => {
         description: formDescription.trim() || undefined,
         floor_area_sqm: formFloorArea ? parseFloat(formFloorArea) : undefined,
         occupant_capacity: formCapacity ? parseInt(formCapacity, 10) : undefined,
+        floors_count: formFloors ? parseInt(formFloors, 10) : undefined,
+        classrooms_count: formClassrooms ? parseInt(formClassrooms, 10) : undefined,
+        laboratories_count: formLabs ? parseInt(formLabs, 10) : undefined,
+        operating_hours_per_day: formOperatingHours ? parseFloat(formOperatingHours) : undefined,
+        current_occupancy: formCurrentOccupancy ? parseInt(formCurrentOccupancy, 10) : undefined,
+        verification_status: formVerificationStatus,
       };
 
       await apiClient.updateBlock(editingBlock.id, payload);
@@ -513,13 +543,36 @@ export const CampusBlocksPage: React.FC = () => {
                 className={`p-5 rounded-xl bg-slate-900 border border-slate-800 hover:border-slate-700 transition-all flex flex-col justify-between group shadow-sm`}
               >
                 <div>
-                  {/* Category and Code Header */}
+                  {/* Category, Verification, and Code Header */}
                   <div className="flex items-center justify-between mb-2">
-                    <span
-                      className={`text-[10px] font-semibold px-2 py-0.5 rounded-full border ${catMeta.badgeClass}`}
-                    >
-                      {catMeta.label}
-                    </span>
+                    <div className="flex items-center space-x-1.5">
+                      <span
+                        className={`text-[10px] font-semibold px-2 py-0.5 rounded-full border ${catMeta.badgeClass}`}
+                      >
+                        {catMeta.label}
+                      </span>
+                      {b.verification_status && (
+                        <span
+                          className={`text-[10px] font-medium px-1.5 py-0.5 rounded-full border ${
+                            b.verification_status === 'verified'
+                              ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20'
+                              : b.verification_status === 'user_provided'
+                              ? 'bg-blue-500/10 text-blue-400 border-blue-500/20'
+                              : b.verification_status === 'estimated'
+                              ? 'bg-amber-500/10 text-amber-400 border-amber-500/20'
+                              : 'bg-slate-500/10 text-slate-400 border-slate-500/20'
+                          }`}
+                        >
+                          {b.verification_status === 'verified'
+                            ? 'Verified'
+                            : b.verification_status === 'user_provided'
+                            ? 'User Data'
+                            : b.verification_status === 'estimated'
+                            ? 'Estimated'
+                            : 'Pending'}
+                        </span>
+                      )}
+                    </div>
                     <span className="text-[11px] font-mono text-slate-400 bg-slate-950 px-2 py-0.5 rounded border border-slate-800">
                       {b.code}
                     </span>
@@ -534,6 +587,32 @@ export const CampusBlocksPage: React.FC = () => {
                   <p className="text-xs text-slate-400 mt-1.5 line-clamp-2 leading-relaxed">
                     {b.description || 'No detailed facility description provided.'}
                   </p>
+
+                  {/* Operational Tags */}
+                  {(b.floors_count || b.classrooms_count || b.laboratories_count || b.operating_hours_per_day || b.current_occupancy) ? (
+                    <div className="flex flex-wrap gap-1.5 mt-2.5">
+                      {b.floors_count ? (
+                        <span className="text-[10px] px-2 py-0.5 rounded bg-slate-800/80 text-slate-300">
+                          {b.floors_count} Floors
+                        </span>
+                      ) : null}
+                      {(b.classrooms_count || b.laboratories_count) ? (
+                        <span className="text-[10px] px-2 py-0.5 rounded bg-slate-800/80 text-slate-300">
+                          {b.classrooms_count || 0} CR · {b.laboratories_count || 0} Labs
+                        </span>
+                      ) : null}
+                      {b.operating_hours_per_day ? (
+                        <span className="text-[10px] px-2 py-0.5 rounded bg-slate-800/80 text-slate-300">
+                          {b.operating_hours_per_day} hrs/d
+                        </span>
+                      ) : null}
+                      {b.current_occupancy ? (
+                        <span className="text-[10px] px-2 py-0.5 rounded bg-slate-800/80 text-slate-300">
+                          Occ: {b.current_occupancy.toLocaleString()}
+                        </span>
+                      ) : null}
+                    </div>
+                  ) : null}
                 </div>
 
                 {/* Metrics and Actions Bar */}
@@ -710,6 +789,100 @@ export const CampusBlocksPage: React.FC = () => {
                 </div>
               </div>
 
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs font-medium text-slate-300 mb-1">
+                    Current Occupancy
+                  </label>
+                  <input
+                    type="number"
+                    min="0"
+                    step="1"
+                    value={formCurrentOccupancy}
+                    onChange={(e) => setFormCurrentOccupancy(e.target.value)}
+                    placeholder="e.g. 950"
+                    className="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-800 text-slate-200 text-xs focus:outline-none focus:border-emerald-500"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-medium text-slate-300 mb-1">
+                    Operating Hours / Day
+                  </label>
+                  <input
+                    type="number"
+                    min="0"
+                    max="24"
+                    step="0.5"
+                    value={formOperatingHours}
+                    onChange={(e) => setFormOperatingHours(e.target.value)}
+                    placeholder="e.g. 10.5"
+                    className="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-800 text-slate-200 text-xs focus:outline-none focus:border-emerald-500"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-3 gap-3">
+                <div>
+                  <label className="block text-xs font-medium text-slate-300 mb-1">
+                    Floors Count
+                  </label>
+                  <input
+                    type="number"
+                    min="1"
+                    step="1"
+                    value={formFloors}
+                    onChange={(e) => setFormFloors(e.target.value)}
+                    placeholder="e.g. 4"
+                    className="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-800 text-slate-200 text-xs focus:outline-none focus:border-emerald-500"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-medium text-slate-300 mb-1">
+                    Classrooms
+                  </label>
+                  <input
+                    type="number"
+                    min="0"
+                    step="1"
+                    value={formClassrooms}
+                    onChange={(e) => setFormClassrooms(e.target.value)}
+                    placeholder="e.g. 24"
+                    className="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-800 text-slate-200 text-xs focus:outline-none focus:border-emerald-500"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-medium text-slate-300 mb-1">
+                    Laboratories
+                  </label>
+                  <input
+                    type="number"
+                    min="0"
+                    step="1"
+                    value={formLabs}
+                    onChange={(e) => setFormLabs(e.target.value)}
+                    placeholder="e.g. 12"
+                    className="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-800 text-slate-200 text-xs focus:outline-none focus:border-emerald-500"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-medium text-slate-300 mb-1">
+                  Data Quality & Verification Status
+                </label>
+                <select
+                  value={formVerificationStatus}
+                  onChange={(e) => setFormVerificationStatus(e.target.value)}
+                  className="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-800 text-slate-200 text-xs focus:outline-none focus:border-emerald-500"
+                >
+                  <option value="verified">Verified (Audited institutional measurement)</option>
+                  <option value="user_provided">User Provided (Department log/declaration)</option>
+                  <option value="estimated">Estimated (Engineering benchmark / proxy)</option>
+                  <option value="awaiting_verification">Awaiting Verification (Pending physical audit)</option>
+                  <option value="not_applicable">Not Applicable</option>
+                </select>
+              </div>
+
               <div>
                 <label className="block text-xs font-medium text-slate-300 mb-1">
                   Facility Description
@@ -841,6 +1014,100 @@ export const CampusBlocksPage: React.FC = () => {
                     className="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-800 text-slate-200 text-xs focus:outline-none focus:border-emerald-500"
                   />
                 </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs font-medium text-slate-300 mb-1">
+                    Current Occupancy
+                  </label>
+                  <input
+                    type="number"
+                    min="0"
+                    step="1"
+                    value={formCurrentOccupancy}
+                    onChange={(e) => setFormCurrentOccupancy(e.target.value)}
+                    placeholder="e.g. 950"
+                    className="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-800 text-slate-200 text-xs focus:outline-none focus:border-emerald-500"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-medium text-slate-300 mb-1">
+                    Operating Hours / Day
+                  </label>
+                  <input
+                    type="number"
+                    min="0"
+                    max="24"
+                    step="0.5"
+                    value={formOperatingHours}
+                    onChange={(e) => setFormOperatingHours(e.target.value)}
+                    placeholder="e.g. 10.5"
+                    className="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-800 text-slate-200 text-xs focus:outline-none focus:border-emerald-500"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-3 gap-3">
+                <div>
+                  <label className="block text-xs font-medium text-slate-300 mb-1">
+                    Floors Count
+                  </label>
+                  <input
+                    type="number"
+                    min="1"
+                    step="1"
+                    value={formFloors}
+                    onChange={(e) => setFormFloors(e.target.value)}
+                    placeholder="e.g. 4"
+                    className="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-800 text-slate-200 text-xs focus:outline-none focus:border-emerald-500"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-medium text-slate-300 mb-1">
+                    Classrooms
+                  </label>
+                  <input
+                    type="number"
+                    min="0"
+                    step="1"
+                    value={formClassrooms}
+                    onChange={(e) => setFormClassrooms(e.target.value)}
+                    placeholder="e.g. 24"
+                    className="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-800 text-slate-200 text-xs focus:outline-none focus:border-emerald-500"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-medium text-slate-300 mb-1">
+                    Laboratories
+                  </label>
+                  <input
+                    type="number"
+                    min="0"
+                    step="1"
+                    value={formLabs}
+                    onChange={(e) => setFormLabs(e.target.value)}
+                    placeholder="e.g. 12"
+                    className="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-800 text-slate-200 text-xs focus:outline-none focus:border-emerald-500"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-medium text-slate-300 mb-1">
+                  Data Quality & Verification Status
+                </label>
+                <select
+                  value={formVerificationStatus}
+                  onChange={(e) => setFormVerificationStatus(e.target.value)}
+                  className="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-800 text-slate-200 text-xs focus:outline-none focus:border-emerald-500"
+                >
+                  <option value="verified">Verified (Audited institutional measurement)</option>
+                  <option value="user_provided">User Provided (Department log/declaration)</option>
+                  <option value="estimated">Estimated (Engineering benchmark / proxy)</option>
+                  <option value="awaiting_verification">Awaiting Verification (Pending physical audit)</option>
+                  <option value="not_applicable">Not Applicable</option>
+                </select>
               </div>
 
               <div>

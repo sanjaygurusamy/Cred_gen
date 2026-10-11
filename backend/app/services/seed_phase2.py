@@ -1,3 +1,4 @@
+import json
 import logging
 from typing import Dict, Any, List
 from sqlalchemy.orm import Session
@@ -18,6 +19,14 @@ COIMBATORE_27_BLOCKS: List[Dict[str, Any]] = [
         "description": "Primary academic hall housing engineering lecture auditoriums and administrative offices.",
         "floor_area_sqm": 18500.0,
         "occupant_capacity": 3200,
+        "current_occupancy": 2850,
+        "floors_count": 4,
+        "classrooms_count": 38,
+        "laboratories_count": 14,
+        "operating_hours_per_day": 12.0,
+        "verification_status": "verified",
+        "area_unit": "sqm",
+        "metadata_json": {"hvac_system": "VRF + Natural Ventilation", "primary_use": "Engineering Auditoriums & Dean's Office"}
     },
     {
         "name": "Academic Block 2",
@@ -26,6 +35,14 @@ COIMBATORE_27_BLOCKS: List[Dict[str, Any]] = [
         "description": "Engineering departments, research labs, computing centres, and faculty chambers.",
         "floor_area_sqm": 22000.0,
         "occupant_capacity": 3800,
+        "current_occupancy": 3400,
+        "floors_count": 5,
+        "classrooms_count": 46,
+        "laboratories_count": 24,
+        "operating_hours_per_day": 14.0,
+        "verification_status": "verified",
+        "area_unit": "sqm",
+        "metadata_json": {"data_center": True, "clean_rooms": 2}
     },
     {
         "name": "Academic Block 3",
@@ -34,6 +51,14 @@ COIMBATORE_27_BLOCKS: List[Dict[str, Any]] = [
         "description": "Sciences, humanities, undergraduate laboratories, and lecture halls.",
         "floor_area_sqm": 16000.0,
         "occupant_capacity": 2500,
+        "current_occupancy": 2150,
+        "floors_count": 4,
+        "classrooms_count": 32,
+        "laboratories_count": 18,
+        "operating_hours_per_day": 10.0,
+        "verification_status": "verified",
+        "area_unit": "sqm",
+        "metadata_json": {"specialized_labs": ["Physics", "Chemistry", "Biotech"]}
     },
     {
         "name": "Academic Block 4",
@@ -42,6 +67,14 @@ COIMBATORE_27_BLOCKS: List[Dict[str, Any]] = [
         "description": "Advanced research laboratories, seminar complexes, and interdisciplinary centres.",
         "floor_area_sqm": 14500.0,
         "occupant_capacity": 2000,
+        "current_occupancy": 1650,
+        "floors_count": 4,
+        "classrooms_count": 24,
+        "laboratories_count": 20,
+        "operating_hours_per_day": 12.0,
+        "verification_status": "awaiting_verification",
+        "area_unit": "sqm",
+        "metadata_json": {"interdisciplinary_centres": ["Cyber Security", "Robotics"]}
     },
     {
         "name": "MBA",
@@ -50,6 +83,14 @@ COIMBATORE_27_BLOCKS: List[Dict[str, Any]] = [
         "description": "Amrita School of Business executive amphitheaters, case study halls, and faculty wing.",
         "floor_area_sqm": 8500.0,
         "occupant_capacity": 900,
+        "current_occupancy": 780,
+        "floors_count": 3,
+        "classrooms_count": 14,
+        "laboratories_count": 4,
+        "operating_hours_per_day": 10.0,
+        "verification_status": "verified",
+        "area_unit": "sqm",
+        "metadata_json": {"executive_amphitheaters": 4, "trading_lab": True}
     },
     {
         "name": "CIR",
@@ -58,6 +99,14 @@ COIMBATORE_27_BLOCKS: List[Dict[str, Any]] = [
         "description": "Corporate and Industry Relations centre, career development, and campus placement complex.",
         "floor_area_sqm": 4200.0,
         "occupant_capacity": 600,
+        "current_occupancy": 450,
+        "floors_count": 2,
+        "classrooms_count": 8,
+        "laboratories_count": 4,
+        "operating_hours_per_day": 9.0,
+        "verification_status": "verified",
+        "area_unit": "sqm",
+        "metadata_json": {"interview_cubicles": 24, "auditorium_seats": 300}
     },
 
     # 2. Hostels (10)
@@ -68,6 +117,12 @@ COIMBATORE_27_BLOCKS: List[Dict[str, Any]] = [
         "description": "Senior women student residential hostel with solar water heating and study halls.",
         "floor_area_sqm": 12500.0,
         "occupant_capacity": 750,
+        "current_occupancy": 725,
+        "floors_count": 5,
+        "operating_hours_per_day": 24.0,
+        "verification_status": "verified",
+        "area_unit": "sqm",
+        "metadata_json": {"solar_water_heater_lpd": 15000, "rooms": 250}
     },
     {
         "name": "Mythri",
@@ -76,6 +131,12 @@ COIMBATORE_27_BLOCKS: List[Dict[str, Any]] = [
         "description": "Women student residential hostel with attached reading rooms and recreation hall.",
         "floor_area_sqm": 11000.0,
         "occupant_capacity": 650,
+        "current_occupancy": 615,
+        "floors_count": 4,
+        "operating_hours_per_day": 24.0,
+        "verification_status": "awaiting_verification",
+        "area_unit": "sqm",
+        "metadata_json": {"rooms": 220}
     },
     {
         "name": "Adithi",
@@ -84,6 +145,11 @@ COIMBATORE_27_BLOCKS: List[Dict[str, Any]] = [
         "description": "Women student residential hostel with courtyard and natural ventilation.",
         "floor_area_sqm": 11500.0,
         "occupant_capacity": 680,
+        "current_occupancy": 640,
+        "floors_count": 4,
+        "operating_hours_per_day": 24.0,
+        "verification_status": "awaiting_verification",
+        "area_unit": "sqm"
     },
     {
         "name": "Savithri",
@@ -92,6 +158,11 @@ COIMBATORE_27_BLOCKS: List[Dict[str, Any]] = [
         "description": "Postgraduate and research scholars women hostel facility.",
         "floor_area_sqm": 9800.0,
         "occupant_capacity": 550,
+        "current_occupancy": 510,
+        "floors_count": 4,
+        "operating_hours_per_day": 24.0,
+        "verification_status": "verified",
+        "area_unit": "sqm"
     },
     {
         "name": "Kashyapa",
@@ -100,6 +171,12 @@ COIMBATORE_27_BLOCKS: List[Dict[str, Any]] = [
         "description": "Men undergraduate student residential hostel with energy monitoring sub-meters.",
         "floor_area_sqm": 13500.0,
         "occupant_capacity": 850,
+        "current_occupancy": 830,
+        "floors_count": 5,
+        "operating_hours_per_day": 24.0,
+        "verification_status": "verified",
+        "area_unit": "sqm",
+        "metadata_json": {"digital_submetered": True}
     },
     {
         "name": "Vashita",
@@ -108,6 +185,11 @@ COIMBATORE_27_BLOCKS: List[Dict[str, Any]] = [
         "description": "Men residential hostel complex with spacious dining connectivity.",
         "floor_area_sqm": 13000.0,
         "occupant_capacity": 800,
+        "current_occupancy": 780,
+        "floors_count": 5,
+        "operating_hours_per_day": 24.0,
+        "verification_status": "verified",
+        "area_unit": "sqm"
     },
     {
         "name": "Agastya",
@@ -116,6 +198,12 @@ COIMBATORE_27_BLOCKS: List[Dict[str, Any]] = [
         "description": "Men residential hostel block equipped with rainwater harvesting conduits.",
         "floor_area_sqm": 12800.0,
         "occupant_capacity": 780,
+        "current_occupancy": 750,
+        "floors_count": 5,
+        "operating_hours_per_day": 24.0,
+        "verification_status": "verified",
+        "area_unit": "sqm",
+        "metadata_json": {"rainwater_catchment": True}
     },
     {
         "name": "Bhrighu",
@@ -124,6 +212,11 @@ COIMBATORE_27_BLOCKS: List[Dict[str, Any]] = [
         "description": "Men student residential hostel with common recreation and reading wings.",
         "floor_area_sqm": 12000.0,
         "occupant_capacity": 720,
+        "current_occupancy": 690,
+        "floors_count": 4,
+        "operating_hours_per_day": 24.0,
+        "verification_status": "awaiting_verification",
+        "area_unit": "sqm"
     },
     {
         "name": "Yagnavalkya",
@@ -132,6 +225,11 @@ COIMBATORE_27_BLOCKS: List[Dict[str, Any]] = [
         "description": "Men senior and postgraduate residential hostel wing.",
         "floor_area_sqm": 10500.0,
         "occupant_capacity": 620,
+        "current_occupancy": 590,
+        "floors_count": 4,
+        "operating_hours_per_day": 24.0,
+        "verification_status": "awaiting_verification",
+        "area_unit": "sqm"
     },
     {
         "name": "Nachiketas",
@@ -140,6 +238,11 @@ COIMBATORE_27_BLOCKS: List[Dict[str, Any]] = [
         "description": "Men student residential hostel with multi-story accommodation blocks.",
         "floor_area_sqm": 11200.0,
         "occupant_capacity": 660,
+        "current_occupancy": 630,
+        "floors_count": 4,
+        "operating_hours_per_day": 24.0,
+        "verification_status": "awaiting_verification",
+        "area_unit": "sqm"
     },
 
     # 3. Faculty Quarters (1)
@@ -150,6 +253,12 @@ COIMBATORE_27_BLOCKS: List[Dict[str, Any]] = [
         "description": "Residential apartment towers and bungalows for university professors, faculty, and resident staff.",
         "floor_area_sqm": 35000.0,
         "occupant_capacity": 1200,
+        "current_occupancy": 1080,
+        "floors_count": 4,
+        "operating_hours_per_day": 24.0,
+        "verification_status": "user_provided",
+        "area_unit": "sqm",
+        "metadata_json": {"units_count": 280, "substation_id": "SS-RES"}
     },
 
     # 4. Kitchens and Canteens (4)
@@ -160,6 +269,12 @@ COIMBATORE_27_BLOCKS: List[Dict[str, Any]] = [
         "description": "Centralized mass food preparation, steam boilers, cold storage, and distribution hub.",
         "floor_area_sqm": 4800.0,
         "occupant_capacity": 250,
+        "current_occupancy": 180,
+        "floors_count": 2,
+        "operating_hours_per_day": 16.0,
+        "verification_status": "verified",
+        "area_unit": "sqm",
+        "metadata_json": {"primary_fuel": "Commercial LPG + Steam Boilers", "waste_treatment": "On-site Anaerobic Digestion"}
     },
     {
         "name": "Sopanam Canteen",
@@ -168,6 +283,12 @@ COIMBATORE_27_BLOCKS: List[Dict[str, Any]] = [
         "description": "Major dining hall complex serving south campus student community and faculty.",
         "floor_area_sqm": 3200.0,
         "occupant_capacity": 1100,
+        "current_occupancy": 950,
+        "floors_count": 2,
+        "operating_hours_per_day": 16.0,
+        "verification_status": "verified",
+        "area_unit": "sqm",
+        "metadata_json": {"dining_capacity": 800, "organic_waste_sorting": True}
     },
     {
         "name": "Prasada Canteen",
@@ -176,6 +297,11 @@ COIMBATORE_27_BLOCKS: List[Dict[str, Any]] = [
         "description": "Campus dining cafeteria with indoor and open-air seating for students and staff.",
         "floor_area_sqm": 2800.0,
         "occupant_capacity": 900,
+        "current_occupancy": 780,
+        "floors_count": 2,
+        "operating_hours_per_day": 15.0,
+        "verification_status": "verified",
+        "area_unit": "sqm"
     },
     {
         "name": "Samudhra Canteen",
@@ -184,6 +310,11 @@ COIMBATORE_27_BLOCKS: List[Dict[str, Any]] = [
         "description": "Food court and refreshment facility serving visitors, seminars, and north academic quadrant.",
         "floor_area_sqm": 2100.0,
         "occupant_capacity": 650,
+        "current_occupancy": 480,
+        "floors_count": 1,
+        "operating_hours_per_day": 14.0,
+        "verification_status": "awaiting_verification",
+        "area_unit": "sqm"
     },
 
     # 5. Transportation (1)
@@ -194,6 +325,12 @@ COIMBATORE_27_BLOCKS: List[Dict[str, Any]] = [
         "description": "University bus fleet depot, EV charging stations, vehicle maintenance bays, and dispatch depot.",
         "floor_area_sqm": 6500.0,
         "occupant_capacity": 120,
+        "current_occupancy": 65,
+        "floors_count": 1,
+        "operating_hours_per_day": 16.0,
+        "verification_status": "verified",
+        "area_unit": "sqm",
+        "metadata_json": {"bus_fleet": 35, "ev_passenger_shuttles": 4, "service_vans": 8, "ev_chargers": 6}
     },
 
     # 6. Sewage Treatment (2)
@@ -204,6 +341,12 @@ COIMBATORE_27_BLOCKS: List[Dict[str, Any]] = [
         "description": "Primary wastewater recycling plant servicing academic zone and north residential sector.",
         "floor_area_sqm": 3500.0,
         "occupant_capacity": 25,
+        "current_occupancy": 12,
+        "floors_count": 1,
+        "operating_hours_per_day": 24.0,
+        "verification_status": "verified",
+        "area_unit": "sqm",
+        "metadata_json": {"treatment_capacity_kld": 1500, "technology": "MBBR / Extended Aeration", "effluent_reuse": "100% Horticulture"}
     },
     {
         "name": "Sewage Treatment Plant 2",
@@ -212,6 +355,12 @@ COIMBATORE_27_BLOCKS: List[Dict[str, Any]] = [
         "description": "Secondary wastewater treatment plant with tertiary filtration for campus landscape irrigation.",
         "floor_area_sqm": 3200.0,
         "occupant_capacity": 20,
+        "current_occupancy": 10,
+        "floors_count": 1,
+        "operating_hours_per_day": 24.0,
+        "verification_status": "verified",
+        "area_unit": "sqm",
+        "metadata_json": {"treatment_capacity_kld": 1200, "technology": "Tertiary Sand & Carbon Filtration"}
     },
 
     # 7. Other Facilities (3)
@@ -222,6 +371,12 @@ COIMBATORE_27_BLOCKS: List[Dict[str, Any]] = [
         "description": "Campus solid waste segregation center, dry recyclables compaction, and composting facility.",
         "floor_area_sqm": 2400.0,
         "occupant_capacity": 35,
+        "current_occupancy": 22,
+        "floors_count": 1,
+        "operating_hours_per_day": 10.0,
+        "verification_status": "verified",
+        "area_unit": "sqm",
+        "metadata_json": {"segregation_bays": 5, "compost_pits": 8, "shredder_units": 2}
     },
     {
         "name": "Fabrication",
@@ -230,6 +385,11 @@ COIMBATORE_27_BLOCKS: List[Dict[str, Any]] = [
         "description": "Central engineering fabrication yard, metal works, carpentry, and electrical repair unit.",
         "floor_area_sqm": 4100.0,
         "occupant_capacity": 80,
+        "current_occupancy": 45,
+        "floors_count": 1,
+        "operating_hours_per_day": 8.0,
+        "verification_status": "awaiting_verification",
+        "area_unit": "sqm"
     },
     {
         "name": "Generator",
@@ -238,6 +398,12 @@ COIMBATORE_27_BLOCKS: List[Dict[str, Any]] = [
         "description": "High-capacity diesel generator house and HT electrical substation supplying backup campus power.",
         "floor_area_sqm": 1800.0,
         "occupant_capacity": 15,
+        "current_occupancy": 6,
+        "floors_count": 1,
+        "operating_hours_per_day": 4.0,
+        "verification_status": "verified",
+        "area_unit": "sqm",
+        "metadata_json": {"dg_sets": ["2x 1000 kVA", "1x 500 kVA"], "automatic_transfer_switch": True}
     },
 ]
 
@@ -312,8 +478,16 @@ def seed_phase2_inventory(db: Session) -> Dict[str, Any]:
                 code=spec["code"],
                 category=spec["category"],
                 description=spec["description"],
-                floor_area_sqm=spec["floor_area_sqm"],
-                occupant_capacity=spec["occupant_capacity"],
+                floor_area_sqm=spec.get("floor_area_sqm"),
+                area_unit=spec.get("area_unit", "sqm"),
+                occupant_capacity=spec.get("occupant_capacity"),
+                current_occupancy=spec.get("current_occupancy"),
+                floors_count=spec.get("floors_count"),
+                classrooms_count=spec.get("classrooms_count"),
+                laboratories_count=spec.get("laboratories_count"),
+                operating_hours_per_day=spec.get("operating_hours_per_day"),
+                verification_status=spec.get("verification_status", "awaiting_verification"),
+                metadata_json=json.dumps(spec["metadata_json"]) if "metadata_json" in spec else None,
                 is_active=True
             )
             db.add(new_block)
@@ -324,8 +498,23 @@ def seed_phase2_inventory(db: Session) -> Dict[str, Any]:
             existing_block.code = spec["code"]
             existing_block.category = spec["category"]
             existing_block.description = spec["description"]
-            existing_block.floor_area_sqm = spec["floor_area_sqm"]
-            existing_block.occupant_capacity = spec["occupant_capacity"]
+            existing_block.floor_area_sqm = spec.get("floor_area_sqm")
+            existing_block.area_unit = spec.get("area_unit", "sqm")
+            existing_block.occupant_capacity = spec.get("occupant_capacity")
+            if "current_occupancy" in spec:
+                existing_block.current_occupancy = spec.get("current_occupancy")
+            if "floors_count" in spec:
+                existing_block.floors_count = spec.get("floors_count")
+            if "classrooms_count" in spec:
+                existing_block.classrooms_count = spec.get("classrooms_count")
+            if "laboratories_count" in spec:
+                existing_block.laboratories_count = spec.get("laboratories_count")
+            if "operating_hours_per_day" in spec:
+                existing_block.operating_hours_per_day = spec.get("operating_hours_per_day")
+            if "verification_status" in spec:
+                existing_block.verification_status = spec.get("verification_status")
+            if "metadata_json" in spec:
+                existing_block.metadata_json = json.dumps(spec["metadata_json"]) if isinstance(spec["metadata_json"], (dict, list)) else spec["metadata_json"]
 
     db.commit()
 

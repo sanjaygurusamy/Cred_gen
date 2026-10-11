@@ -86,7 +86,15 @@ export interface CampusBlock {
   category_label?: string;
   description?: string | null;
   floor_area_sqm?: number | null;
+  area_unit?: string | null;
   occupant_capacity?: number | null;
+  current_occupancy?: number | null;
+  floors_count?: number | null;
+  classrooms_count?: number | null;
+  laboratories_count?: number | null;
+  operating_hours_per_day?: number | null;
+  verification_status?: string | null;
+  metadata_json?: Record<string, any> | null;
   is_active: boolean;
   created_at: string;
   updated_at: string;
@@ -99,7 +107,15 @@ export interface BlockCreatePayload {
   category: BlockCategory;
   description?: string;
   floor_area_sqm?: number;
+  area_unit?: string;
   occupant_capacity?: number;
+  current_occupancy?: number;
+  floors_count?: number;
+  classrooms_count?: number;
+  laboratories_count?: number;
+  operating_hours_per_day?: number;
+  verification_status?: string;
+  metadata_json?: Record<string, any>;
   is_active?: boolean;
 }
 
@@ -109,7 +125,15 @@ export interface BlockUpdatePayload {
   category?: BlockCategory;
   description?: string;
   floor_area_sqm?: number;
+  area_unit?: string;
   occupant_capacity?: number;
+  current_occupancy?: number;
+  floors_count?: number;
+  classrooms_count?: number;
+  laboratories_count?: number;
+  operating_hours_per_day?: number;
+  verification_status?: string;
+  metadata_json?: Record<string, any>;
   is_active?: boolean;
 }
 
@@ -839,6 +863,85 @@ export interface SequestrationSummary {
   data_quality_label: string;
 }
 
+// Workstream B: UN SDG Mapping, Recommendations & Institutional Evidence Types
+export interface SDGIndicator {
+  indicator_code: string;
+  name: string;
+  description: string;
+  campus_applicability: string;
+  metric_unit: string;
+}
 
+export interface SDGTarget {
+  target_code: string;
+  title: string;
+  indicators: SDGIndicator[];
+}
 
+export interface SDGItem {
+  sdg_number: number;
+  title: string;
+  short_name: string;
+  theme_color: string;
+  icon_name: string;
+  institutional_relevance: string;
+  targets: SDGTarget[];
+}
 
+export type RecommendationStatus = 'proposed' | 'approved' | 'in_progress' | 'completed' | 'rejected';
+export type RecommendationPriority = 'critical' | 'high' | 'medium' | 'low';
+
+export interface SustainabilityRecommendationItem {
+  id: string;
+  campus_id: string;
+  block_id?: string | null;
+  block_name?: string | null;
+  title: string;
+  category: string;
+  priority: RecommendationPriority;
+  proposed_action: string;
+  supporting_evidence: string;
+  related_sdgs: number[];
+  potential_co2e_reduction_t_year: number;
+  calculation_rationale: string;
+  assumptions: string;
+  status: RecommendationStatus;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface InstitutionalEvidenceItem {
+  id: string;
+  campus_id: string;
+  title: string;
+  category: string;
+  reference_number: string;
+  reporting_period: string;
+  associated_sdgs: number[];
+  framework_tags: string[];
+  verification_status: string;
+  document_url_or_ref?: string | null;
+  description?: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface SustainabilitySummary {
+  campus_name: string;
+  campus_code: string;
+  gross_emissions_t_co2e: number;
+  scope_1_t: number;
+  scope_2_t: number;
+  scope_3_t: number;
+  total_electricity_kwh: number;
+  biological_sequestration_t_co2e: number;
+  standing_trees_count: number;
+  green_space_area_sqm: number;
+  active_sdgs_count: number;
+  recommendations_count: number;
+  potential_reduction_t_co2e: number;
+  data_quality_breakdown: Record<string, number>;
+  sdgs: SDGItem[];
+  priority_recommendations: SustainabilityRecommendationItem[];
+  institutional_evidence_items: InstitutionalEvidenceItem[];
+}

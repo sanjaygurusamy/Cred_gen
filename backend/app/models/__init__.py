@@ -8,6 +8,7 @@ from app.models.activity_record import DailyActivityRecord
 from app.models.baseline import ElectricityBaseline, ElectricityBaselineItem, DailyElectricityEstimate
 from app.models.carbon import EmissionFactor, CarbonCalculationRecord
 from app.models.trees import GreenSpace, TreeInventory, PlantationRecord
+from app.models.sustainability import SustainabilityRecommendation, InstitutionalEvidence
 
 __all__ = [
     "Base",
@@ -25,4 +26,6 @@ __all__ = [
     "GreenSpace",
     "TreeInventory",
     "PlantationRecord",
+    "SustainabilityRecommendation",
+    "InstitutionalEvidence",
 ]

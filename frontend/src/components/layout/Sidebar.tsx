@@ -14,6 +14,7 @@ import {
   X,
   Zap,
   Trees,
+  Globe2,
 } from 'lucide-react';
 import { useSystemStatus } from '../../context/SystemStatusContext';
 
@@ -32,6 +33,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
     { label: 'Electricity & Baselines', path: '/electricity', icon: Zap, phaseTag: 'P4' },
     { label: 'Carbon Calculator', path: '/calculator', icon: Calculator, phaseTag: 'P5' },
     { label: 'Trees & Plantation', path: '/trees', icon: Trees, phaseTag: 'Eco' },
+    { label: 'Sustainability & SDGs', path: '/sustainability', icon: Globe2, phaseTag: 'SDG' },
     { label: 'Reports', path: '/reports', icon: BarChart3, phaseTag: 'P6' },
     { label: 'MRV Projects', path: '/mrv', icon: Target, phaseTag: 'P7' },
     { label: 'Evidence & Documents', path: '/evidence', icon: FileText, phaseTag: 'P7' },
