@@ -317,6 +317,33 @@ export const ActivityDataPage: React.FC = () => {
     }
   };
 
+  // Handler to load duplicate record directly into edit modal
+  const handleEditDuplicateRecord = async (recId: string) => {
+    try {
+      const rec = await apiClient.getActivityRecordById(recId);
+      openEditModal(rec);
+      if (quantity && !isNaN(parseFloat(quantity))) {
+        setEditQuantity(quantity);
+      }
+      if (selectedUnit) {
+        setEditUnit(selectedUnit);
+      }
+      if (dataStatus) {
+        setEditDataStatus(dataStatus);
+      }
+      if (measurementMethod) {
+        setEditMethod(measurementMethod);
+      }
+      if (notes) {
+        setEditNotes(notes);
+      }
+    } catch {
+      setActiveTab('history');
+      setHistoryFilterBlock(selectedBlockId);
+      setHistoryFilterActivity(selectedActivityId);
+    }
+  };
+
   return (
     <div className="space-y-6">
       {/* Page Header */}
@@ -365,17 +392,48 @@ export const ActivityDataPage: React.FC = () => {
         </div>
       )}
 
-      {error && (
-        <div className="p-4 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-400 text-xs flex items-center justify-between">
-          <div className="flex items-center space-x-2">
-            <AlertCircle className="w-4 h-4 flex-shrink-0" />
-            <span>{error}</span>
+      {error && (() => {
+        const duplicateMatch = error.match(/\/api\/v1\/activity-records\/([a-f0-9-]+)/);
+        const duplicateRecordId = duplicateMatch ? duplicateMatch[1] : null;
+
+        return (
+          <div className="p-4 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-300 text-xs space-y-3">
+            <div className="flex items-start justify-between gap-2">
+              <div className="flex items-start space-x-2">
+                <AlertCircle className="w-4 h-4 flex-shrink-0 text-rose-400 mt-0.5" />
+                <span className="leading-relaxed">{error}</span>
+              </div>
+              <button onClick={() => setError(null)} className="text-rose-400 hover:text-rose-300">
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            {duplicateRecordId && (
+              <div className="flex flex-wrap items-center gap-2 pt-2 border-t border-rose-500/20">
+                <button
+                  type="button"
+                  onClick={() => handleEditDuplicateRecord(duplicateRecordId)}
+                  className="px-3 py-1.5 rounded-lg bg-rose-600 hover:bg-rose-500 text-white font-semibold text-xs flex items-center space-x-1.5 transition-colors shadow-sm"
+                >
+                  <Pencil className="w-3.5 h-3.5" />
+                  <span>Update Existing Measurement Now</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setActiveTab('history');
+                    setHistoryFilterBlock(selectedBlockId);
+                    setHistoryFilterActivity(selectedActivityId);
+                  }}
+                  className="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs transition-colors"
+                >
+                  View in History & Audit Log
+                </button>
+              </div>
+            )}
           </div>
-          <button onClick={() => setError(null)} className="text-rose-400 hover:text-rose-300">
-            <X className="w-4 h-4" />
-          </button>
-        </div>
-      )}
+        );
+      })()}
 
       {/* Tab Selector */}
       <div className="flex items-center border-b border-slate-800 space-x-6 text-sm">
