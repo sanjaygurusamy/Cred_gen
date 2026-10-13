@@ -36,7 +36,10 @@ def api_client():
 
 
 def test_seed_demo_data_idempotency(db_session: Session):
-    """Verify that re-running the 14-day seeder produces zero duplicate records."""
+    """Verify that running the 14-day seeder produces records and rerunning produces zero duplicate records."""
+    # Ensure initial seed has run
+    seed_14_day_demo_data(db_session)
+    # Verify idempotency on second run
     res = seed_14_day_demo_data(db_session)
     assert res["status"] == "success"
     assert res["days_covered"] == 14
