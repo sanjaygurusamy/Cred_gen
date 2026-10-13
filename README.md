@@ -1,6 +1,26 @@
-# 🌿 CampusCarbon AI: AI-Powered Sustainability Recommendation Platform
+# 🌿 CampusCarbon AI: Institutional Digital MRV & Carbon Accounting Platform
 
-**CampusCarbon AI** is an institutional decarbonization and sustainability intelligence platform that combines **deterministic greenhouse gas (GHG) calculations**, a **curated sustainability rule library**, **configurable LLM natural language analysis**, an **interactive reduction scenario simulator**, and **UN Sustainable Development Goal (SDG) mapping**.
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.5-blue?logo=typescript)](https://www.typescriptlang.org/)
+[![Python](https://img.shields.io/badge/Python-3.11%20%7C%203.12%20%7C%203.13-blue?logo=python)](https://www.python.org/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.115-009688?logo=fastapi)](https://fastapi.tiangolo.com/)
+[![React](https://img.shields.io/badge/React-18-61DAFB?logo=react)](https://react.dev/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind-3.4-38B2AC?logo=tailwindcss)](https://tailwindcss.com/)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-336791?logo=postgresql)](https://www.postgresql.org/)
+[![Docker](https://img.shields.io/badge/Docker-Compose-2496ED?logo=docker)](https://www.docker.com/)
+[![Tests](https://img.shields.io/badge/Tests-82%20Backend%20%7C%2053%20Frontend%20Passing-emerald)](https://github.com/sanjaygurusamy/Cred_gen)
+
+**CampusCarbon AI** is an institutional digital **Measurement, Reporting, and Verification (MRV)** and carbon intelligence platform developed for **Amrita Vishwa Vidyapeetham — Coimbatore Campus (`AVV-CBE`)**.
+
+It pairs **deterministic greenhouse gas (GHG) accounting** (GHG Protocol Corporate Standard) with **sub-metered electricity baselines**, **botanical allometric carbon sequestration (IPCC AFOLU)**, **UN Sustainable Development Goal (SDG) alignment**, and **audit-grade executive reporting (NAAC Criteria 7 & NIRF Green Campus)**.
+
+---
+
+## 🏛️ Institutional Scope: Amrita Coimbatore (`AVV-CBE`)
+
+- **Physical Campus**: Amrita Vishwa Vidyapeetham, Ettimadai, Coimbatore, Tamil Nadu, India.
+- **27 Canonical Campus Blocks**: Academic Blocks 1–3, Central Library, CIR, Mega Mess, Hostels A–K, Research Centers, Health Centre, Sports Complex, and Utility/STP Plants.
+- **Gross Emissions Boundary**: Scope 1 (Diesel generators, kitchen LPG, fleet transport), Scope 2 (Grid electricity via CEA v20 grid factor, on-site solar PV generation), and Scope 3 (Municipal water withdrawal, STP wastewater, food waste composting, paper/plastic recycling, and e-waste).
+- **Segregated Biological Carbon Sink**: Campus tree census across 8 dominant native species (Neem, Teak, Banyan, Gulmohar, Bamboo, Peepal, Mango, Pongamia) and dedicated green spaces calculated using IPCC AFOLU & Forest Survey of India (FSI) growth curves.
 
 ---
 
@@ -8,98 +28,115 @@
 
 ```mermaid
 flowchart TD
-    A["Campus Activity Data\n(Smart Meters, Boilers, Fleets, Cafeteria)"] --> B["Backend Data Retrieval & Telemetry"]
-    B --> C["Deterministic Carbon Calculation Engine\nE = Activity × Emission Factor"]
-    C --> D["Emission & Inefficiency Analysis"]
-    D --> E["Curated Rule-Based Recommendation Engine\n(7 Sustainability Categories)"]
-    E --> F["LLM Contextual Service\n(OpenAI / Compatible Provider)"]
-    F --> G["Structured JSON Schema Validation\n(Pydantic Schema Guard)"]
-    G --> H["Recommendation Review Interface\n(Approve / Reject / Assessment)"]
-    H --> I["Reduction Scenario Simulator\n(What-If Hypotheses)"]
-    I --> J["Deterministic Emission Reduction Estimates\nReduction = E_base - E_alt"]
-    J --> K["UN SDG Mapping & Impact Explanation\n(SDGs 6, 7, 9, 11, 12, 13)"]
-    K --> L["Interactive Recommendations Dashboard\n(Overview, Cards, Simulator, Outcomes)"]
+    A["Campus Activity Telemetry\n(27 Blocks · Meters · Fuel · Waste · Trees)"] --> B["FastAPI Data Ingestion & Validation\n(Pydantic Schema Guards & Units Engine)"]
+    B --> C["PostgreSQL 16 Database\n(Alembic Versioned Migrations)"]
+    C --> D["Deterministic Carbon Engine\nE = Activity × Emission Factor"]
+    C --> E["Electricity Baseline Engine\n(Day-Type Profiles & Meter Variance)"]
+    C --> F["Tree Allometric Model\n(IPCC AFOLU & FSI Living Canopy)"]
+    D --> G["Institutional Analytics & Disclosures\n(Dashboard · Scopes · Trends)"]
+    E --> G
+    F --> H["Segregated Biological Carbon Sink\n(Isolated from Gross Compliance)"]
+    G --> I["UN SDG Alignment & NAAC/NIRF Reports\n(PDF & CSV Executive Disclosures)"]
 ```
 
-### Source of Truth Principle
-- **The LLM is NEVER the source of numerical truth.** The LLM generates contextual reasoning, proposed interventions, and preliminary qualitative suggestions.
-- **The Deterministic Carbon Calculation Engine is the absolute numerical authority.** All baselines, alternative scenarios, percentage reductions, and financial calculations are computed deterministically using approved emission factors (DEFRA, EPA eGRID, IPCC).
-- **Offline / Resilient Fallback:** If the LLM API is unavailable, times out, or has no configured API key, the system seamlessly falls back to the curated rule-based sustainability catalog with zero downtime.
+### The Source of Truth Principle
+1. **Deterministic Authority**: Numerical calculations are 100% deterministic, transparent, and reproducible. Every emission record stores its formula, activity quantity, conversion unit, factor citation, and calculation version.
+2. **Double-Counting Prevention**: Secondary readings, superseded measurements, and unmetered estimations are strictly isolated.
+3. **Biological Sink Segregation**: Carbon sequestration in trees is displayed as a distinct biological sink and is never subtracted from gross Scope 1/2/3 totals to guarantee regulatory audit integrity.
 
 ---
 
-## 🧮 Deterministic Calculation Engine (Section 9 & 10)
+## 📂 Repository Directory Structure
 
-### GHG Protocol Corporate Standard Formulations
-
-$$E_{\text{baseline}} = A_{\text{baseline}} \times EF_{\text{baseline}}$$
-
-$$E_{\text{alternative}} = A_{\text{alternative}} \times EF_{\text{alternative}}$$
-
-$$\text{Potential Reduction } (kgCO_2e) = E_{\text{baseline}} - E_{\text{alternative}}$$
-
-$$\text{Percentage Reduction } (\%) = \left( \frac{\text{Potential Reduction}}{E_{\text{baseline}}} \right) \times 100$$
-
-$$\text{Annual Reduction } (tCO_2e/\text{year}) = \left( \frac{\text{Potential Reduction } \times 365}{1000} \right)$$
-
-$$\text{Annual Financial Savings } (\$) = (A_{\text{baseline}} - A_{\text{alternative}}) \times \text{Cost Rate} \times 365$$
-
-### Example Kitchen LPG Scenario (Section 10)
-- **Baseline:** Commercial dining hall consuming **$80\text{ kg/day}$** of commercial LPG.
-- **Approved Factor ($EF_{\text{LPG}}$):** $2.983\text{ kgCO}_2\text{e/kg}$ (DEFRA 2024).
-- **Baseline Emissions:** $80 \times 2.983 = \mathbf{238.64\text{ kgCO}_2\text{e/day}}$.
-- **Intervention Assumption:** $10\%$ reduction via high-efficiency pre-mix burners and flame tuning.
-- **Alternative Consumption:** $80 \times (1 - 0.10) = \mathbf{72\text{ kg/day}}$.
-- **Alternative Emissions:** $72 \times 2.983 = \mathbf{214.776\text{ kgCO}_2\text{e/day}}$.
-- **Potential Reduction:** $238.64 - 214.776 = \mathbf{23.864\text{ kgCO}_2\text{e/day}}$ ($8.71\text{ tCO}_2\text{e/year}$).
-- **Estimated Financial Savings:** $8\text{ kg/day} \times \$1.45/\text{kg} \times 365 = \mathbf{\$4,234.00/\text{year}}$.
-
----
-
-## 📂 Category-Specific Sustainability Rules (Section 6)
-
-1. **Electricity**: LED lighting retrofits with PIR occupancy controls; rooftop solar PV peak shaving and structural feasibility.
-2. **Transportation**: Shuttle fleet route optimization; campus internal maintenance utility fleet electrification.
-3. **Kitchen & LPG**: Pre-mix burner replacement and flame maintenance; biogas biomethanation pre-feasibility with strict feedstock and safety setback buffers.
-4. **Food Waste**: Cafeteria preparation portioning and plate waste reduction; on-campus enclosed in-vessel aerobic composting (with avoided landfill methane methodology safeguards).
-5. **Water & Wastewater**: Pumping network Variable Frequency Drives (VFDs) and acoustic leak abatement; decentralized greywater tertiary filtration for non-potable flushing and irrigation.
-6. **Air Conditioning (HVAC)**: Chilled water setpoint optimization ($24^\circ\text{C}-25^\circ\text{C}$ ASHRAE 55) and schedule curtailment; condenser coil descaling and design COP restoration.
-7. **Fabrication & Construction**: Machine shop idle power cut-offs and sub-metering; low-carbon Pozzolanic/slag blended cement substitution.
-
----
-
-## 🌐 UN Sustainable Development Goals (SDG) Mapping
-
-| SDG | Title | Focus Area in CampusCarbon AI | Example Measurable Indicator |
-| :--- | :--- | :--- | :--- |
-| **SDG 6** | Clean Water and Sanitation | Water pumping efficiency, leak abatement, greywater reuse | Target 6.4: Water-use efficiency ($m^3/\text{occupant-day}$) |
-| **SDG 7** | Affordable and Clean Energy | Solar PV, lighting efficiency, HVAC setpoints | Target 7.2/7.3: Energy efficiency ($kWh/\text{saved}$) |
-| **SDG 9** | Industry, Innovation and Infrastructure | Workshop sub-metering, blended cements, BMS | Target 9.4: Sustainable infrastructure retrofitting |
-| **SDG 11** | Sustainable Cities and Communities | Transit route optimization, fleet electrification | Target 11.6: Per-capita settlement environmental impact |
-| **SDG 12** | Responsible Consumption and Production | Food waste reduction, kitchen LPG efficiency | Target 12.3: Per capita food waste reduction |
-| **SDG 13** | Climate Action | Scope 1, 2, and 3 GHG reduction interventions | Target 13.2: Institutional emissions abatement targets |
+```text
+├── backend/                        # FastAPI Application & Business Logic
+│   ├── alembic/                    # Database migration environment
+│   │   └── versions/               # Production schema migration versions
+│   ├── app/
+│   │   ├── api/v1/endpoints/       # 12 REST API route modules
+│   │   ├── core/                   # Config, database pools, SDG catalog, unit conversions
+│   │   ├── models/                 # SQLAlchemy 2.0 ORM data models
+│   │   ├── schemas/                # Pydantic request/response validation schemas
+│   │   ├── services/               # Carbon engine, reporting engine, tree service, seeders
+│   │   └── main.py                 # FastAPI application entrypoint & middleware
+│   ├── tests/                      # Pytest verification suites (82 tests)
+│   ├── alembic.ini                 # Alembic migration configuration
+│   └── requirements.txt            # Python dependencies
+├── frontend/                       # React 18 + TypeScript + Vite Dashboard
+│   ├── src/
+│   │   ├── __tests__/              # Vitest UI & integration tests (53 tests)
+│   │   ├── api/client.ts           # Centralized Axios API client
+│   │   ├── components/
+│   │   │   ├── common/             # Reusable UI widgets & UN SDG visual vector emblems
+│   │   │   └── layout/             # Shell layout, sidebar, and live telemetry header
+│   │   ├── context/                # System status & connectivity state provider
+│   │   ├── pages/                  # 12 Institutional views (Dashboard, Blocks, Trees, etc.)
+│   │   ├── types/index.ts          # TypeScript domain type definitions
+│   │   ├── App.tsx                 # Client-side router & route metadata
+│   │   ├── index.css               # Global Tailwind CSS styling
+│   │   └── main.tsx                # React DOM entrypoint
+│   ├── package.json                # Frontend dependencies & scripts
+│   ├── tailwind.config.js          # Tailwind CSS design system tokens
+│   ├── tsconfig.json               # TypeScript compiler configuration
+│   └── vite.config.ts              # Vite bundler configuration
+├── docs/                           # Architecture & Engineering Specifications
+│   ├── audit/                      # Phase 1-6 Technical audit findings & changelogs
+│   ├── ARCHITECTURE.md             # High-level system architecture specification
+│   ├── DATABASE_SCHEMA.md          # Complete entity-relationship diagram & tables
+│   ├── DOMAIN_SPECIFICATION.md     # Campus emissions domain rules & definitions
+│   ├── LEGACY_KNOWLEDGE_BASE.md    # Preserved rules, algorithms & simulation models
+│   └── PHASED_PLAN.md              # Phased execution roadmap
+├── docker-compose.yml              # PostgreSQL 16 container definition
+├── run.py                          # Cross-platform Python startup orchestrator
+├── start.bat / start.ps1 / start.sh# 1-Click platform launch scripts (Windows & Linux/macOS)
+├── stop.bat / stop.ps1 / stop.sh   # 1-Click graceful shutdown scripts
+├── .env.example                    # Sample environment variables
+└── README.md                       # Comprehensive platform documentation
+```
 
 ---
 
-## ⚖️ Transparent Recommendation Prioritization Scoring
+## 🧮 Mathematical Formulations
 
-Every recommendation receives a deterministic prioritization score ($0 - 100$):
+### 1. Deterministic GHG Accounting (Scopes 1, 2, and 3)
+$$E_{\text{emission}} = A_{\text{activity}} \times EF_{\text{factor}}$$
 
-$$\text{Score} = 0.35 \times S_{\text{reduction}} + 0.25 \times S_{\text{confidence}} + 0.20 \times S_{\text{feasibility}} + 0.20 \times S_{\text{financial}} - \text{Penalty}_{\text{safety/risk}}$$
+- **Grid Electricity (Scope 2)**: CEA CO2 Baseline Database for the Indian Grid (Version 20, $0.716\text{ kg CO}_2\text{e/kWh}$).
+- **Solar Photovoltaics (Scope 2)**: Direct emissions equal $0.00\text{ kg CO}_2\text{e}$ with avoided grid footprint tracking.
+- **Diesel Stationary Combustion (Scope 1)**: $2.68\text{ kg CO}_2\text{e/L}$.
+- **Commercial LPG (Scope 1)**: $2.983\text{ kg CO}_2\text{e/kg}$.
+- **Food Waste Composting (Scope 3)**: $0.006\text{ kg CO}_2\text{e/kg}$ organic waste.
 
-- **Reduction Impact ($35\%$)**: Based on percentage reduction potential.
-- **Data Confidence ($25\%$)**: High confidence for measured baselines, penalty for estimated/unmetered elements.
-- **Operational Feasibility ($20\%$)**: Penalties for high implementation constraints or required facilities downtime.
-- **Financial Viability ($20\%$)**: Assesses payback and recurring tariff savings.
-- **Safety / Regulatory Safeguard**: Substantial penalty if safety or regulatory prerequisites are unresolved (e.g. biogas buffer zones).
+### 2. Biological Carbon Sequestration (Trees & Living Canopy)
+$$S_{\text{annual}} = \sum_{i=1}^{N_{\text{species}}} \left( C_i \times R_i \times \frac{44}{12} \right)$$
+
+Where:
+- $C_i$: Standing tree count of species $i$.
+- $R_i$: Species-specific annual carbon sequestration rate (kg C/tree/year) derived from FSI/IPCC forestry benchmarks.
+- $\frac{44}{12}$: Molecular conversion factor from elemental carbon ($C$) to carbon dioxide equivalent ($\text{CO}_2\text{e}$).
+
+---
+
+## 🌐 UN Sustainable Development Goals (SDG) Alignment
+
+CampusCarbon AI features built-in vector emblems and metrics for 6 core goals:
+
+| SDG | Goal Name | Institutional Focus at Amrita |
+| :---: | :--- | :--- |
+| **SDG 6** | Clean Water & Sanitation | Water withdrawal metering, STP greywater tertiary treatment & recycling. |
+| **SDG 7** | Affordable & Clean Energy | 27-block energy baselines, rooftop solar PV arrays, and LED retrofits. |
+| **SDG 11** | Sustainable Cities & Communities | Low-carbon campus transit routes, living green space allocation. |
+| **SDG 12** | Responsible Consumption & Production | Dining hall food waste measurement, anaerobic bio-methanation, scrap recycling. |
+| **SDG 13** | Climate Action | Continuous Scope 1/2/3 digital MRV and auditable emission reductions. |
+| **SDG 15** | Life on Land | Campus tree census (Neem, Teak, Banyan) and survival monitoring across plantations. |
 
 ---
 
 ## 🚀 Quickstart Guide (One-Click Launch)
 
 ### Prerequisites
-- **Python 3.10+** (Python 3.12 / 3.13)
-- **Node.js 18+** (Node.js 20 / 22)
+- **Python 3.11+**
+- **Node.js 18+**
 - **Docker Desktop** (for PostgreSQL 16 container)
 
 ---
@@ -108,11 +145,10 @@ $$\text{Score} = 0.35 \times S_{\text{reduction}} + 0.25 \times S_{\text{confide
 
 #### On Windows:
 Double-click `start.bat` in File Explorer, or run in PowerShell / Command Prompt:
-```powershell
+```cmd
 .\start.bat
-# or in PowerShell:
-.\start.ps1
 ```
+*(Or in PowerShell: `.\start.ps1`)*
 
 #### On Linux / macOS / WSL:
 ```bash
@@ -120,73 +156,74 @@ chmod +x start.sh stop.sh
 ./start.sh
 ```
 
-#### Cross-Platform Python Orchestrator:
+#### Via Python Orchestrator:
 ```bash
 python run.py
 ```
 
 The orchestrator automatically:
-1. Connects to or launches Docker Desktop and starts the PostgreSQL 16 container (`campuscarbon_postgres`).
-2. Validates database connectivity and runs any pending Alembic migrations.
-3. Spawns the FastAPI backend (port 8000) and Vite frontend (port 5173).
-4. Verifies health probes on all endpoints.
-5. Automatically opens `http://localhost:5173` in your default browser.
-6. Gracefully shuts down all processes when you press `Ctrl+C`.
+1. Connects to or starts the PostgreSQL 16 container (`campuscarbon_postgres`).
+2. Runs all pending Alembic database migrations.
+3. Idempotently verifies and seeds the 14-day multi-domain campus demonstration dataset.
+4. Starts the FastAPI backend (port `8000`) and Vite frontend (port `5173`).
+5. Launches your default browser to `http://localhost:5173`.
+6. Streams live colored logs and safely handles `Ctrl+C` shutdowns.
 
 ---
 
-### Useful CLI Commands
-
-```powershell
-# Check live health status of all components:
-python run.py --status
-# or: .\start.ps1 -Status
-
-# Force-restart any lingering services:
-python run.py --restart
-# or: .\start.ps1 -Restart
-
-# Stop running backend and frontend services:
+### Option B: Stopping Services
+```cmd
 .\stop.bat
-# or in PowerShell: .\stop.ps1
-# or: python run.py --stop
+```
+*(Or: `.\stop.ps1` / `./stop.sh` / `python run.py --stop`)*
 
-# Stop all services including the PostgreSQL Docker container:
+To stop all services including the Docker PostgreSQL container:
+```bash
 python run.py --stop-all
-# or: .\stop.ps1 -All
 ```
 
 ---
 
-### Service URLs
+## 🌐 Service Access Endpoints
 
-| Service | URL | Description |
+| Service | Address | Description |
 | :--- | :--- | :--- |
-| **Frontend Web App** | `http://localhost:5173` | React 18 + TypeScript + Vite UI |
+| **Frontend Web Application** | `http://localhost:5173` | React 18 + TypeScript + Vite Dashboard |
 | **Backend REST API** | `http://localhost:8000` | FastAPI server & calculation engine |
-| **Interactive API Docs** | `http://localhost:8000/docs` | Swagger UI documentation |
+| **Swagger Interactive Docs** | `http://localhost:8000/docs` | OpenAPI specification & test sandbox |
 | **PostgreSQL Database** | `localhost:5432` | Container `campuscarbon_postgres` |
 
 ---
 
-### Automated Testing
+## 🧪 Verification & Automated Testing
 
-To run the complete verification suites:
+The entire platform is backed by comprehensive test coverage:
+
 ```powershell
-# Backend pytest suite (65 tests)
+# 1. Run all 82 backend pytest tests
 python -m pytest backend/tests -v
 
-# Frontend vitest suite (43 tests)
-cd frontend && npm.cmd test -- --run
+# 2. Run all 53 frontend Vitest component & page tests
+cd frontend
+npx vitest run
 
-# TypeScript production build check
-cd frontend && npm.cmd run build
+# 3. Verify TypeScript type safety
+npx tsc --noEmit
+
+# 4. Verify production bundle build
+npx vite build
 ```
+
+**Quality Status**:
+- Backend: **82 / 82 tests passing** (100%)
+- Frontend: **53 / 53 tests passing** (100%)
+- TypeScript: **0 compilation errors**
+- Vite Build: **Clean production build** (~24s)
 
 ---
 
-## 🔒 Security & Privacy Practices
-- **Backend-only LLM credentials:** API keys are never bundled in client code or committed to version control.
-- **Data minimization:** Telemetry data sent to external LLMs is stripped of PII and internal security records.
-- **Role-Based Access Control (RBAC):** Restricts generation, approval, rejection, and implementation to authorized roles (`admin`, `facility_manager`), while maintaining read-only views for `viewer`.
-- **Campus Isolation:** Enforces multi-tenant data boundaries at the database query level.
+## 🔒 Security & Data Integrity Safeguards
+- **Tamper-Evident Logs**: Calculation parameters, emission factor citations, and version stamps are permanently recorded.
+- **Environment Isolation**: Secret keys and database credentials reside strictly in `.env` (never committed to Git).
+- **Graceful Offline Fallback**: The test runner and application feature automatic fallback capabilities when Docker is offline.
+- **Institutional Compliance**: Designed in accordance with NAAC Criteria 7, NIRF Green Campus, and GHG Protocol standards.
